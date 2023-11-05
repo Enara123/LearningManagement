@@ -3,7 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const routes = require("./routes/UserRoute");
+const userroutes = require("./routes/UserRoute");
+const questionroutes = require("./routes/QuestionRoute");
 
 const cors = require("cors");
 
@@ -18,6 +19,6 @@ mongoose
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(err));
 
-app.use("/api", routes);
+app.use("/api", userroutes, questionroutes);
 
 app.listen(PORT, () => console.log(`Listening at ${PORT}`));
