@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const userroutes = require("./routes/UserRoute");
-const questionroutes = require("./routes/QuestionRoute");
+const moduleroutes = require("./routes/ModuleRoute");
 
 const cors = require("cors");
 
@@ -19,6 +19,6 @@ mongoose
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(err));
 
-app.use("/api", userroutes, questionroutes);
+app.use("/api", userroutes, moduleroutes);
 
 app.listen(PORT, () => console.log(`Listening at ${PORT}`));
