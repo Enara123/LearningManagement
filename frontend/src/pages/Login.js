@@ -3,7 +3,7 @@ import axios from "axios";
 import { baseURL } from "../utils/constant";
 import { useNavigate } from "react-router-dom";
 import TextInput from "../components/TextInput";
-import ButtonCustom from "../components/ButtonCustome";
+import ButtonCustom from "../components/ButtonCustom";
 import Heading from "../components/Heading";
 import hatImage from "../icons/Hat.png";
 import { ToastContainer, toast } from "react-toastify";

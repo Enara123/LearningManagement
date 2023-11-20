@@ -7,6 +7,7 @@ const DashboardNavigation = ({ buttons, onLogout }) => {
   const [activeButton, setActiveButton] = useState(null);
 
   const handleButtonClick = (index) => {
+    console.log(index);
     setActiveButton(index);
   };
 
