@@ -1,4 +1,5 @@
 const ModuleModel = require("../models/ModuleModel");
+//const { v4: uuidv4 } = require("uuid");
 
 module.exports.getModules = async (req, res) => {
   const modules = await ModuleModel.find();
@@ -196,7 +197,12 @@ module.exports.getQuestions = (req, res) => {
       if (!module) {
         return res.status(404).send("Module not found");
       }
-      res.json(module.quizQuestions);
+
+      const randomQuestions = module.quizQuestions
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 10);
+
+      res.json(randomQuestions);
     })
     .catch((err) => {
       console.log(err);
@@ -473,6 +479,46 @@ module.exports.getAssessmentQuestions = (req, res) => {
         return res.status(404).send("Module not found");
       }
       res.json(module.assessment.assessmentQuestions);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send({ error: err, msg: "Something went wrong!" });
+    });
+};
+
+module.exports.setAllowedBatch = (req, res) => {
+  const { id } = req.params;
+
+  const { batchId } = req.body;
+
+  ModuleModel.findOneAndUpdate(
+    { _id: id },
+    { $push: { allowedBatches: batchId } },
+    { new: true }
+  )
+    .then((updatedModule) => {
+      if (!updatedModule) {
+        return res.status(404).send("Module not found");
+      }
+      res.json(updatedModule);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send({ error: err, msg: "Something went wrong!" });
+    });
+};
+
+module.exports.getAllowedBatches = (req, res) => {
+  const { id } = req.params;
+
+  ModuleModel.findById(id)
+    .select("assessment.allowedBatches")
+    .exec()
+    .then((module) => {
+      if (!module) {
+        return res.status(404).send("Module not found");
+      }
+      res.json(module.assessment.allowedBatches);
     })
     .catch((err) => {
       console.log(err);

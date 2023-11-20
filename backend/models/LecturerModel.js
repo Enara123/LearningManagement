@@ -6,6 +6,8 @@ const lecturerSchema = new mongoose.Schema({
   lecturerTelephone: String,
   lecturerEmail: String,
   lecturerSpeciality: String,
+  lecturerUsername: String,
+  lecturerPassword: String,
 });
 
 module.exports = mongoose.model("Lecturer", lecturerSchema);

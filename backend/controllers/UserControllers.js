@@ -1,40 +1,56 @@
 const UserModel = require("../models/UserModel");
-
+const bcrypt = require("bcrypt");
 module.exports.getUsers = async (req, res) => {
   const users = await UserModel.find();
   res.send(users);
 };
 
-module.exports.saveUser = (req, res) => {
-  const { name, telephone, username, password } = req.body;
+module.exports.saveUser = async (req, res) => {
+  try {
+    let { name, telephone, username, password } = req.body;
+    password = await bcrypt.hash(password, 10);
 
-  UserModel.create({ name, telephone, username, password })
-    .then((data) => {
-      console.log("Saved Successfully...");
-      res.status(201).send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({ error: err, msg: "Something went wrong!" });
+    const data = await UserModel.create({
+      name,
+      telephone,
+      username,
+      password,
     });
+
+    console.log("Saved Successfully...");
+    res.status(201).send(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: err, msg: "Something went wrong!" });
+  }
 };
 
-module.exports.loginUser = (req, res) => {
+module.exports.loginUser = async (req, res) => {
   const { username, password } = req.body;
 
-  UserModel.findOne({ username, password })
-    .then((data) => {
-      if (data) {
-        console.log("Logged in Successfully...");
-        res.status(201).send("exist");
-      } else {
-        res.send("not exist");
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({ error: err, msg: "Something went wrong!" });
-    });
+  try {
+    const user = await UserModel.findOne({ username });
+
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    if (!user.password) {
+      return res.status(500).send("User password not set");
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (isPasswordValid) {
+      res.status(200).send("Success");
+      console.log("Logged in Successfully...");
+    } else {
+      res.status(401).send("Invalid password");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: err, msg: "Something went wrong!" });
+  }
 };
 
 module.exports.updateUser = (req, res) => {

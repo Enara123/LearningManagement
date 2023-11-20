@@ -1,0 +1,190 @@
+GET http://localhost:5000/api/getuser
+
+###
+
+POST http://localhost:5000/api/saveuser
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "telephone": "0123456789",
+    "username": "Ockersz",
+    "password": "123"
+}
+
+
+###
+
+POST http://localhost:5000/api/login
+Content-Type: application/json
+
+{
+    "username": "Ockersz",
+    "password": "123"
+}
+
+###
+
+POST http://localhost:5000/api/lecturer/save
+Content-Type: application/json
+
+{
+
+    "lecturerName": "John Doe",
+  "lecturerAddress": "123, ABC, XYZ",
+  "lecturerTelephone": "0123456789",
+  "lecturerEmail": "email@sa.com",
+  "lecturerSpeciality": "IT",
+  "lecturerUsername": "Ockersz",
+  "lecturerPassword": "123"
+}
+
+###
+
+POST http://localhost:5000/api/saveuser
+Content-Type: application/json
+
+{
+    "name" : "Ockersz",
+    "telephone" : "0123456789",
+    "username" : "admin",
+    "password" : "123"
+}
+
+###
+
+POST http://localhost:5000/api/student/save
+Content-Type: application/json
+
+{
+  "batchName": "DSE23.3F",
+  "studentsNumber": 10
+}
+
+###
+
+GET http://localhost:5000/api/student
+
+###
+
+GET http://localhost:5000/api/student/batch
+Content-Type: application/json
+
+{
+  "batchName" : "DSE23.3F"
+}
+
+###
+
+PUT http://localhost:5000/api/student/change-password
+Content-Type: application/json
+
+{
+  "studentId" : "DSE23.3F-003",
+  "oldPassword" : "uA5`sznlzjnl",
+  "newPassword": "111"
+}
+
+###
+
+POST http://localhost:5000/api/student/login
+Content-Type: application/json
+  
+  {
+    "studentId": "DSE23.3F-008",
+    "studentPassword": "111"
+  }
+
+
+###
+
+GET http://localhost:5000/api/getmodules
+
+###
+
+PUT http://localhost:5000/api/module/65489f5ac0519c6bf3fe3ee4/batch/save
+Content-Type: application/json
+
+{
+  "batchId":"DSE23.2F"
+}
+
+###
+
+GET http://localhost:5000/api/student/batch/all
+
+###
+
+POST http://localhost:5000/api/savemodule
+Content-Type: application/json
+
+{
+  "moduleName" : "C Programming",
+  "moduleDescription" : "Programming fundamentals",
+  "noOfAssessments" : 1,
+  "expectedStudyHours" : 20,
+  "modelStatus" : "Active"
+}
+
+###
+
+POST http://localhost:5000/api/student/save
+Content-Type: application/json
+
+{
+  "batchName" : "DSE23.1F",
+  "studentsNumber" : 5
+}
+
+###
+
+GET http://localhost:5000/api/student
+
+###
+GET http://localhost:5000/api/getmodules
+
+###
+GET http://localhost:5000/api/student/batch/all
+###
+PUT http://localhost:5000/api/student/change-password
+Content-Type: application/json
+
+{
+  "studentId" : "DSE23.1F-001",
+  "oldPassword" : "uD4?mqrqsirl",
+  "newPassword": "123"
+}
+
+###
+
+POST http://localhost:5000/api/quiz/save
+Content-Type: application/json
+
+{
+  "studentId" : "655231205172a7898a577d44",
+  "moduleId" : "6552308f5172a7898a577d42",
+  "marks" : 70
+}
+
+###
+GET http://localhost:5000/api/quiz/get
+Content-Type: application/json
+
+{
+  "studentId" : "655231205172a7898a577d44",
+  "moduleId" : "6552308f5172a7898a577d42"
+}
+
+###
+
+PUT http://localhost:5000/api/module/6552308f5172a7898a577d42/addquestion
+Content-Type: application/json
+
+{
+  "questionNumber" : 1,
+  "complexity" : 2,
+  "question" : "What does stdio.h mean ?",
+  "answer" : ["Standard input out put", "Studio template", "Library in java"],
+  "status" : "Active",
+  "correctAnswer" : "Standard input out put" 
+}

@@ -22,9 +22,9 @@ const {
   deleteAssessmentQuestion,
   hideAssessmentQuestion,
   unHideAssessmentQuestion,
-  getAssessmentQuestions
+  getAssessmentQuestions,
+  setAllowedBatch,
 } = require("../controllers/ModuleController");
-
 
 const router = Router();
 
@@ -50,5 +50,6 @@ router.put("/module/:id/deleteassessmentquestion", deleteAssessmentQuestion);
 router.put("/module/:id/hideassessmentquestion", hideAssessmentQuestion);
 router.put("/module/:id/unhideassessmentquestion", unHideAssessmentQuestion);
 router.get("/module/:id/getassessmentquestions", getAssessmentQuestions);
+router.put("/module/:id/batch/save", setAllowedBatch);
 
 module.exports = router;

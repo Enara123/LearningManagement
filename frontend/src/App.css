@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.Login {
+  display: flex;
+  width: 1920px;
+  padding: 278px 0px 229px 0px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 26px;
+  background: #eff;
+}

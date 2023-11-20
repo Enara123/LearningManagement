@@ -5,6 +5,9 @@ require("dotenv").config();
 
 const userroutes = require("./routes/UserRoute");
 const moduleroutes = require("./routes/ModuleRoute");
+const lecturerroutes = require("./routes/LecturerRoute");
+const studentroutes = require("./routes/StudentRoute");
+const quizroutes = require("./routes/QuizRoute");
 
 const cors = require("cors");
 
@@ -19,6 +22,13 @@ mongoose
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(err));
 
-app.use("/api", userroutes, moduleroutes);
+app.use(
+  "/api",
+  userroutes,
+  moduleroutes,
+  lecturerroutes,
+  studentroutes,
+  quizroutes
+);
 
 app.listen(PORT, () => console.log(`Listening at ${PORT}`));

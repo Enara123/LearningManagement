@@ -5,11 +5,15 @@ const {
   saveLecturer,
   updateLecturer,
   deleteLecturer,
+  loginLecturer,
 } = require("../controllers/LecturerController");
 
 const router = Router();
 
-router.get("/getlecturers", getLecturers);
-router.post("/savelecturer", saveLecturer);
-router.put("/updatelecturer/:id", updateLecturer);
-router.delete("/deletelecturer/:id", deleteLecturer);
+router.get("/lecturer", getLecturers);
+router.post("/lecturer/save", saveLecturer);
+router.put("/lecturer/update/:id", updateLecturer);
+router.delete("/lecturer/delete/:id", deleteLecturer);
+router.post("/lecturer/login", loginLecturer);
+
+module.exports = router;
