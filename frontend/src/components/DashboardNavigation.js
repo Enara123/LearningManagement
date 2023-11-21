@@ -13,7 +13,7 @@ const DashboardNavigation = ({ buttons, onLogout }) => {
 
   const dashboardStyle = {
     display: "flex",
-    height: "95.1vh",
+    height: "95.7vh",
     width: "259px",
     flexDirection: "column",
     alignItems: "center",
