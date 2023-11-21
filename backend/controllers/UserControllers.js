@@ -74,4 +74,4 @@ module.exports.deleteUser = (req, res) => {
       console.log(err);
       res.send({ error: err, msg: "Something went wrong!" });
     });
-};
+}; 

@@ -2,6 +2,7 @@ const { Router } = require("express");
 
 const {
   getModules,
+  getModulesById,
   saveModule,
   updateModule,
   deleteModule,
@@ -29,6 +30,7 @@ const {
 const router = Router();
 
 router.get("/getmodules", getModules);
+router.get("/getmodule/:id", getModulesById);
 router.post("/savemodule", saveModule);
 router.put("/updatemodule/:id", updateModule);
 router.delete("/deletemodule/:id", deleteModule);

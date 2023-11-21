@@ -6,6 +6,21 @@ module.exports.getModules = async (req, res) => {
   res.send(modules);
 };
 
+module.exports.getModulesById = (req, res) => {
+  const { id } = req.params;
+  const module = ModuleModel.findById(id)
+    .then((data) => {
+      if (!data) {
+        return res.status(404).send("Module not found");
+      }
+      res.json(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ error: err, msg: "Something went wrong!" });
+    });
+};
+
 module.exports.saveModule = (req, res) => {
   const {
     moduleName,
