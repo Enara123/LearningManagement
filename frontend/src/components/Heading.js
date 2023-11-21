@@ -1,9 +1,10 @@
 import React from "react";
 
-const Heading = ({ text }) => {
+const Heading = ({ text, style }) => {
   return (
     <h1
       style={{
+        ...style,
         color: "#000",
         textAlign: "center",
         fontFamily: "Montserrat",

@@ -2,13 +2,31 @@ import React, { useState } from "react";
 import logoutImage from "../icons/logout.png";
 import hatImage from "../icons/Hat.png";
 import avatarImage from "../icons/avatar.png";
+import { Link, useNavigate } from "react-router-dom";
 
-const DashboardNavigation = ({ buttons, onLogout }) => {
+const DashboardNavigation = ({ buttons }) => {
   const [activeButton, setActiveButton] = useState(null);
+  const navigation = useNavigate();
+
+  const onLogout = () => {
+    navigation("/");
+  };
 
   const handleButtonClick = (index) => {
     console.log(index);
     setActiveButton(index);
+
+    if (index === "Dashboard") {
+      navigation("/home");
+    } else if (index === "Module") {
+      navigation("/modules");
+    } else if (index === "Report") {
+      //window.location.href = "/report";
+    } else if (index === "Lecturers") {
+      // window.location.href = "/lecturers";
+    } else if (index === "Students") {
+      //window.location.href = "/students";
+    }
   };
 
   const dashboardStyle = {
@@ -98,12 +116,19 @@ const DashboardNavigation = ({ buttons, onLogout }) => {
         {buttons &&
           buttons.map((button) => (
             <li key={button}>
-              <button
-                style={dashboardButtonStyle(button)}
-                onClick={() => handleButtonClick(button)}
+              <Link
+                to={
+                  button === "Dashboard" ? "/home" : `/${button.toLowerCase()}`
+                }
+                style={{ textDecoration: "none" }}
               >
-                {button}
-              </button>
+                <button
+                  style={dashboardButtonStyle(button)}
+                  onClick={() => handleButtonClick(button)}
+                >
+                  {button}
+                </button>
+              </Link>
             </li>
           ))}
       </ul>
