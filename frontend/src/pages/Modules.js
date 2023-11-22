@@ -2,10 +2,14 @@ import React from "react";
 import ButtonCustom from "../components/ButtonCustom";
 import ModuleCard from "../components/ModuleCard";
 import "../App.css";
+import { useNavigate } from "react-router-dom";
 
 const Modules = () => {
+  const navigation = useNavigate();
+
   const handleCreateClick = () => {
     console.log("Create Module clicked");
+    navigation("/create-module");
   };
 
   return (
@@ -15,7 +19,7 @@ const Modules = () => {
         label="+ Create Module"
         height="50px"
         width="228px"
-        onClick={handleCreateClick()}
+        onClick={handleCreateClick}
       />
       <div className="moduleCards">
         <ModuleCard moduleId="655c49756723559f1e822166" />

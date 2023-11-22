@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Modules from "./pages/Modules";
 import SideBar from "./components/SideBar";
+import CreateModule from "./pages/CreateModule";
 
 const App = () => {
   return (
@@ -20,8 +21,6 @@ const App = () => {
 
 const AppContent = () => {
   const location = useLocation();
-
-  // Check if the current route is the login page
   const isLoginPage = location.pathname === "/";
 
   return (
@@ -31,6 +30,7 @@ const AppContent = () => {
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/modules" element={<Modules />} />
+        <Route path="/create-module" element={<CreateModule />} />
       </Routes>
     </div>
   );

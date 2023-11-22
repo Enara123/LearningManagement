@@ -1,5 +1,5 @@
 function Home() {
-  return <div style={{ display: "flex" }}>Hellko</div>;
+  return <div className="HomePage">Hellko</div>;
 }
 
 export default Home;
