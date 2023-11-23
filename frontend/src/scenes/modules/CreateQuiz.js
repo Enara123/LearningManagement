@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import PaperBg from "../../components/PaperBg";
 import { useTheme } from "@emotion/react";
@@ -15,6 +15,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import StyledTextField from "../../components/StyledTextField";
+import { Link as RouterLink } from "react-router-dom";
 
 const CreateQuiz = () => {
   const theme = useTheme();
@@ -334,9 +335,16 @@ const CreateQuiz = () => {
               ))}
             </Box>
             <Box display="flex" justifyContent="center">
-              <LMSButton variant="contained" customWidth="188px">
-                Create Quiz
-              </LMSButton>
+              <Link
+                component={RouterLink}
+                to="/create-assessment"
+                underline="none"
+                color="inherit"
+              >
+                <LMSButton variant="contained" customWidth="188px">
+                  Create Quiz
+                </LMSButton>
+              </Link>
             </Box>
           </Box>
         </Box>

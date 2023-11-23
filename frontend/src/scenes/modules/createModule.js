@@ -5,6 +5,7 @@ import { tokens } from "../../theme";
 import PaperBg from "../../components/PaperBg";
 import LMSButton from "../../components/LMSButton";
 import QuestionBox from "../../components/QuestionBox";
+import { Link as RouterLink } from "react-router-dom";
 
 const CreateModule = () => {
   const theme = useTheme();
@@ -71,14 +72,21 @@ const CreateModule = () => {
               gap: "70px",
             }}
           >
-            <LMSButton
-              variant="contained"
-              customFontSize="14px"
-              customHeight="40px"
-              customWidth="188px"
+            <Link
+              component={RouterLink}
+              to="/create-quiz"
+              underline="none"
+              color="inherit"
             >
-              Submit
-            </LMSButton>
+              <LMSButton
+                variant="contained"
+                customFontSize="14px"
+                customHeight="40px"
+                customWidth="188px"
+              >
+                Submit
+              </LMSButton>
+            </Link>
           </Box>
         </PaperBg>
       </Box>
