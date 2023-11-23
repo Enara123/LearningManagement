@@ -7,8 +7,6 @@ const LecDashboard = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="Dashboard" subtitle="Welcome to your dashboard" />
       </Box>
-      <Typography variant="body1">Helloee</Typography>
-      <Typography variant="body1">Small text</Typography>
     </Box>
   );
 };

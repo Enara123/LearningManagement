@@ -10,7 +10,7 @@ const LMSButton = styled(Button)(
     borderRadius: "30px",
     cursor: "pointer",
     fontSize: customFontSize || "20px",
-    margin: "50px 0px",
+    margin: "20px 0px",
     height: customHeight || "50px",
     width: customWidth || "192px",
     fontFamily: "Montserrat",

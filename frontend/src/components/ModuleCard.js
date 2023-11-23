@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import LMSButton from "./LMSButton";
 
 const ModuleCard = ({ moduleId }) => {
   const [moduleName, setModuleName] = useState("");
@@ -127,23 +128,6 @@ const ModuleCard = ({ moduleId }) => {
     marginBottom: "30px",
   };
 
-  const LMSButton = styled(Button)(({ theme }) => ({
-    color: "#000000",
-    backgroundColor: "#0BE2E2",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "30px",
-    cursor: "pointer",
-    fontSize: "20px",
-    margin: "50px 0px",
-    height: "50px",
-    width: "192px",
-    fontFamily: "Montserrat",
-    "&:hover": {
-      backgroundColor: "#FFF",
-    },
-  }));
-
   return (
     <div className="module-card" style={moduleCardStyle}>
       <button
@@ -159,7 +143,13 @@ const ModuleCard = ({ moduleId }) => {
       <p className="module-description" style={moduleDescriptionStyle}>
         {description}
       </p>
-      <LMSButton variant="contained" onClick={handleView}>
+      <LMSButton
+        variant="contained"
+        customHeight="50px"
+        customWidth="190px"
+        customFontSize="16px"
+        onClick={handleView}
+      >
         View
       </LMSButton>
     </div>
