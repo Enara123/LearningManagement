@@ -7,7 +7,7 @@ export const SideBarData = [
   {
     title: "Dashboard",
     icon: <DashboardIcon />,
-    link: "/",
+    link: "/dashboard",
   },
   {
     title: "Modules",

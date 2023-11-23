@@ -1,3 +1,6 @@
+import { createTheme } from "@mui/material/styles";
+import { useMemo } from "react";
+
 export const tokens = () => ({
   primary: {
     100: "#fbfbfb",
@@ -22,3 +25,58 @@ export const tokens = () => ({
     900: "#022d2d",
   },
 });
+
+const themeSettings = () => {
+  const colors = tokens();
+
+  return {
+    palette: {
+      primary: {
+        main: colors.primary[500],
+      },
+      secondary: {
+        main: colors.blueAccent[500],
+      },
+      neutral: {
+        dark: colors.primary[900],
+        light: colors.primary[100],
+      },
+      background: {
+        default: colors.primary[500],
+      },
+    },
+    typography: {
+      fontFamily: ["Montserrat", "sans-serif"].join(","),
+      fontSize: 12,
+      h1: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+        fontSize: 40,
+      },
+      h2: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+        fontSize: 32,
+      },
+      h3: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+        fontSize: 10,
+      },
+      h4: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+        fontSize: 20,
+      },
+      h5: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+        fontSize: 16,
+      },
+      h6: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+        fontSize: 14,
+      },
+    },
+  };
+};
+
+export const useTheme = () => {
+  const theme = useMemo(() => createTheme(themeSettings()), []);
+  return theme;
+};

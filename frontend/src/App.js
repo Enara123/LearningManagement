@@ -1,13 +1,17 @@
+import { ThemeProvider } from "@emotion/react";
 import "./App.css";
 import SideBar from "./components/SideBar";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { Routes, Route } from "react-router-dom";
-import { cyan, grey } from "@mui/material/colors";
-import LecDashboard from "./scenes/lecDashboard";
-import Modules from "./scenes/modules/moduleMenu";
-import CreateModule from "./scenes/modules/createModule";
+import { CssBaseline } from "@mui/material";
+import { Routes, Route, useLocation } from "react-router-dom";
+import Login from "./scenes/Login";
+import { createTheme } from "@mui/material/styles";
+import { grey, cyan } from "@mui/material/colors";
+import LecDashboard from "./scenes/lecDashboard/LecDashboard";
+import CreateQuiz from "./scenes/modules/CreateQuiz";
 
 function App() {
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/";
   const theme = () =>
     createTheme({
       palette: {
@@ -59,14 +63,26 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="App">
-        <SideBar />
-        <main className="content">
-          <Routes>
-            <Route path="/" element={<LecDashboard />} />
-            <Route path="/modules" element={<Modules />} />
-            <Route path="/createModule" element={<CreateModule />} />
-          </Routes>
-        </main>
+        {!isLoginPage && <SideBar />}
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={
+              <main className="content">
+                <LecDashboard />
+              </main>
+            }
+          />
+          <Route
+            path="/create-quiz"
+            element={
+              <main className="content">
+                <CreateQuiz />
+              </main>
+            }
+          />
+        </Routes>
       </div>
     </ThemeProvider>
   );

@@ -2,7 +2,7 @@ import { styled } from "@mui/system";
 import Button from "@mui/material/Button";
 
 const LMSButton = styled(Button)(
-  ({ theme, customHeight, customWidth, customFontSize }) => ({
+  ({ customHeight, customWidth, customFontSize }) => ({
     color: "#000000",
     backgroundColor: "#0BE2E2",
     padding: "10px 20px",
