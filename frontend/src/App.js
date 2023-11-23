@@ -2,8 +2,10 @@ import "./App.css";
 import SideBar from "./components/SideBar";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
-import LecDashboard from "./scenes/lecDashboard";
 import { cyan, grey } from "@mui/material/colors";
+import LecDashboard from "./scenes/lecDashboard";
+import Modules from "./scenes/modules/moduleMenu";
+import CreateModule from "./scenes/modules/createModule";
 
 function App() {
   const theme = () =>
@@ -61,6 +63,8 @@ function App() {
         <main className="content">
           <Routes>
             <Route path="/" element={<LecDashboard />} />
+            <Route path="/modules" element={<Modules />} />
+            <Route path="/createModule" element={<CreateModule />} />
           </Routes>
         </main>
       </div>
