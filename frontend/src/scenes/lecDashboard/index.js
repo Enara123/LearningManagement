@@ -8,7 +8,7 @@ const LecDashboard = () => {
         <Header title="Dashboard" subtitle="Welcome to your dashboard" />
       </Box>
       <Typography variant="body1">Helloee</Typography>
-      <Typography variant="body2">Small text</Typography>
+      <Typography variant="body1">Small text</Typography>
     </Box>
   );
 };
