@@ -75,6 +75,14 @@ export const themeSettings = () => {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
         fontSize: 14,
       },
+      body1: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+        fontSize: 12,
+      },
+      body2: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+        fontSize: 10,
+      },
     },
   };
 };
