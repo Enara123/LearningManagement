@@ -50,14 +50,14 @@ export const themeSettings = () => {
     },
     typography: {
       fontFamily: ["Montserrat", "sans-serif"].join(","),
-      fontSize: 12,
+      fontSize: "12px",
       h1: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: 40,
+        fontSize: "40px",
       },
       h2: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: 32,
+        fontSize: "32px",
       },
       h3: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
@@ -65,15 +65,15 @@ export const themeSettings = () => {
       },
       h4: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: 20,
+        fontSize: "20px",
       },
       h5: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: 16,
+        fontSize: "16px",
       },
       h6: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: 14,
+        fontSize: "14px",
       },
     },
   };
@@ -81,6 +81,5 @@ export const themeSettings = () => {
 
 export const useTheme = () => {
   const theme = useMemo(() => createTheme(themeSettings));
-
   return [theme];
 };

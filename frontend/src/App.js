@@ -1,10 +1,17 @@
+import { ThemeProvider, useTheme } from "@emotion/react";
 import "./App.css";
-import ModuleCard from "./components/ModuleCard";
+import Login from "./scenes/Login";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { CssBaseline } from "@mui/material";
 
 function App() {
   return (
     <div className="App">
-      <ModuleCard moduleId="" />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
