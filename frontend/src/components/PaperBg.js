@@ -10,7 +10,7 @@ const PaperBg = ({ customWidth, customHeight, children }) => {
         display: "flex",
         flexWrap: "wrap",
         "& > :not(style)": {
-          m: 1,
+          marginRight: "20px",
           width: customWidth || 500,
           height: customHeight || 400,
           borderRadius: "20px",

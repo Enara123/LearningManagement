@@ -8,6 +8,7 @@ import { createTheme } from "@mui/material/styles";
 import { grey, cyan } from "@mui/material/colors";
 import LecDashboard from "./scenes/lecDashboard/LecDashboard";
 import CreateQuiz from "./scenes/modules/CreateQuiz";
+import ModuleInfo from "./scenes/modules/moduleInfo";
 import ModuleMenu from "./scenes/modules/moduleMenu";
 import CreateModule from "./scenes/modules/createModule";
 import CreateAssessment from "./scenes/modules/CreateAssessment";
@@ -74,6 +75,14 @@ function App() {
             element={
               <main className="content">
                 <LecDashboard />
+              </main>
+            }
+          />
+          <Route
+            path="/moduleInfo"
+            element={
+              <main className="content">
+                <ModuleInfo />
               </main>
             }
           />
