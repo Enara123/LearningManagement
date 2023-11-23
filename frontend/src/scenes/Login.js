@@ -55,7 +55,7 @@ function Login() {
           })
           .then((res) => {
             if (res.data === "Success") {
-              history("/home", { state: { id: username } });
+              history("/dashboard", { state: { id: username } });
               setUsername("");
               setPassword("");
             } else if (res.data === "not exist") {
@@ -85,17 +85,19 @@ function Login() {
     width: "192px",
     fontFamily: "Montserrat",
     "&:hover": {
-      backgroundColor: "#FFF",
+      backgroundColor: "#EFF",
     },
   }));
 
   return (
-    <div className="login" style={outer}>
-      <div className="login" style={divStyle}>
+    <div className="loginPage" style={outer}>
+      <div className="loginPage" style={divStyle}>
         <form onSubmit={submit} style={{ textAlign: "center" }}>
           <img src={hatImage} alt="Hat" style={{ marginTop: "10px" }} />
 
-          <Typography variant="h3">Welcome Back</Typography>
+          <Typography variant="h4" gutterBottom>
+            Welcome Back
+          </Typography>
 
           <TextField
             id="standard-basic"
@@ -118,7 +120,6 @@ function Login() {
                     aria-label="toggle password visibility"
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDownPassword}
-                    onChange={(e) => setPassword(e.target.value)}
                     edge="end"
                   >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -126,20 +127,14 @@ function Login() {
                 </InputAdornment>
               }
               label="Password"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </FormControl>
           <br />
           <LMSButton variant="contained" onClick={(e) => submit(e)}>
-            View
+            Login
           </LMSButton>
 
-          {/* <ButtonCustom
-            label="Sign In"
-            height="52px"
-            width="389px"
-            type="submit"
-            onClick={(e) => submit(e)}
-          /> */}
           <ToastContainer />
         </form>
       </div>

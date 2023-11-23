@@ -1,18 +1,38 @@
 import { ThemeProvider, useTheme } from "@emotion/react";
 import "./App.css";
-import Login from "./scenes/Login";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SideBar from "./components/SideBar";
 import { CssBaseline } from "@mui/material";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import Login from "./scenes/Login";
 
 function App() {
+  const theme = useTheme();
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/";
+
   return (
-    <div className="App">
-      <Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div className="App">
+        {!isLoginPage && <SideBar />}
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={
+              <main className="content">
+                <Login />
+              </main>
+            }
+          />
         </Routes>
-      </Router>
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }
 

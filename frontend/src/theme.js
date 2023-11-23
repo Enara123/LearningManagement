@@ -1,9 +1,12 @@
-import { createContext, useState, useMemo } from "react";
-import { createTheme } from "@mui/material";
+import theme from "./theme"; // Add missing import statement
+import { createTheme } from "@mui/material/styles";
+import { useMemo } from "react";
+import { themeSettings, tokens } from "./theme";
 
-// Color design tokens
+const themeArray = [theme];
+export default themeArray;
 
-export const tokens = () => ({
+tokens = () => ({
   primary: {
     100: "#fbfbfb",
     200: "#f7f7f7",
@@ -28,9 +31,8 @@ export const tokens = () => ({
   },
 });
 
-//mui theme settings
-export const themeSettings = () => {
-  const colors = tokens;
+themeSettings = () => {
+  const colors = tokens();
 
   return {
     palette: {
@@ -50,36 +52,36 @@ export const themeSettings = () => {
     },
     typography: {
       fontFamily: ["Montserrat", "sans-serif"].join(","),
-      fontSize: "12px",
+      fontSize: 12,
       h1: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: "40px",
+        fontSize: 40,
       },
       h2: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: "32px",
+        fontSize: 32,
       },
       h3: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: 24,
+        fontSize: 10,
       },
       h4: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: "20px",
+        fontSize: 20,
       },
       h5: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: "16px",
+        fontSize: 16,
       },
       h6: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
-        fontSize: "14px",
+        fontSize: 14,
       },
     },
   };
 };
 
 export const useTheme = () => {
-  const theme = useMemo(() => createTheme(themeSettings));
-  return [theme];
+  const theme = useMemo(() => createTheme(themeSettings()), []);
+  return theme;
 };
