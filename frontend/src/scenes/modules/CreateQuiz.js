@@ -9,12 +9,21 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import LMSButton from "../../components/LMSButton";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import StyledTextField from "../../components/StyledTextField";
 
 const CreateQuiz = () => {
   const theme = useTheme();
-  const colors = tokens(theme.palette);
-
+  const colors = tokens(theme.colors);
   const [numberOfAnswers, setNumberOfAnswers] = useState(4);
+  const [questionsData, setQuestionsData] = useState([]);
+  const [selectedAnswer, setSelectedAnswer] = useState("");
+  const [sliderValue, setSliderValue] = useState(1);
+  const [questionText, setQuestionText] = useState("");
 
   const handleIncrease = () => {
     if (numberOfAnswers < 5) {
@@ -28,7 +37,49 @@ const CreateQuiz = () => {
     }
   };
 
+  const handleAddQuestion = () => {
+    const answersArray = Array.from({ length: numberOfAnswers }, (_, index) => {
+      const answerIndex = String.fromCharCode(65 + index);
+      return `Answer ${answerIndex}`;
+    });
+
+    const newQuestion = {
+      question: questionText || "New Question",
+      complexity: sliderValue,
+      answers: selectedAnswers,
+      correctAnswer:
+        selectedAnswer !== ""
+          ? selectedAnswers[selectedAnswer]
+          : selectedAnswers[0],
+    };
+    console.log(newQuestion);
+    setQuestionsData([...questionsData, newQuestion]);
+
+    // Reset input fields after adding a question
+    setQuestionText("");
+    setSliderValue(1);
+    setSelectedAnswer("");
+  };
+
+  const handleSliderChange = (event, newValue) => {
+    setSliderValue(newValue);
+    console.log(newValue);
+  };
+
+  const handleRadioChange = (event) => {
+    setSelectedAnswer(event.target.value);
+  };
+
   const dynamicHeight = 780 + numberOfAnswers * 55;
+
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+
+  const handleAnswerChange = (questionIndex, answer) => {
+    setSelectedAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionIndex]: answer,
+    }));
+  };
 
   return (
     <Box mt="20px">
@@ -36,99 +87,191 @@ const CreateQuiz = () => {
         <Header subtitle="Modules > Create Module" />
       </Box>
       <PaperBg customWidth={1500} customHeight={dynamicHeight}>
-        <Box
-          display="flex"
-          gap="30px"
-          alignItems="center"
-          sx={{ padding: "30px", paddingLeft: "50px" }}
-        >
-          <Typography variant="h3" color={colors.primary[700]}>
-            {" "}
-            {">"} &nbsp;&nbsp;Enter Module Details
-          </Typography>
-          <Typography
-            variant="h3"
-            color={colors.blueAccent[500]}
-            onClick={() => {
-              alert("Hello");
-            }}
-            sx={{ cursor: "pointer" }}
-          >
-            {">"} &nbsp;&nbsp;Create Quiz
-          </Typography>
-        </Box>
+        <Box display="flex">
+          <Box width="60%">
+            <Box
+              display="flex"
+              gap="30px"
+              alignItems="center"
+              sx={{ padding: "30px", paddingLeft: "50px" }}
+            >
+              <Typography variant="h3" color={colors.primary[700]}>
+                {" "}
+                {">"} &nbsp;&nbsp;Enter Module Details
+              </Typography>
+              <Typography
+                variant="h3"
+                color={colors.blueAccent[500]}
+                onClick={() => {
+                  alert("Hello");
+                }}
+                sx={{ cursor: "pointer" }}
+              >
+                {">"} &nbsp;&nbsp;Create Quiz
+              </Typography>
+            </Box>
 
-        <QuestionBox
-          question="Question"
-          onChange={(e) => {
-            console.log(e.target.value);
-          }}
-        />
-        <Box
-          display="flex"
-          alignItems="center"
-          sx={{ padding: "30px", paddingLeft: "100px" }}
-        >
-          <Typography variant="h4" sx={{ flex: "0 0 250px" }}>
-            Complexity
-          </Typography>
-          <Box sx={{ width: "1080px" }}>
-            <PrettoSlider
-              defaultValue={1}
-              valueLabelDisplay="auto"
-              step={1}
-              marks
-              min={1}
-              max={5}
+            <QuestionBox
+              question="Question"
               onChange={(e) => {
-                // console.log(e.target.value);
+                setQuestionText(e.target.value);
               }}
             />
-          </Box>
-        </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{ padding: "30px", paddingLeft: "100px" }}
+            >
+              <Typography variant="h4" sx={{ flex: "0 0 250px" }}>
+                Complexity
+              </Typography>
+              <Box sx={{ width: "1080px" }}>
+                <PrettoSlider
+                  defaultValue={1}
+                  valueLabelDisplay="auto"
+                  step={1}
+                  marks
+                  min={1}
+                  max={5}
+                  onChange={handleSliderChange}
+                />
+              </Box>
+            </Box>
 
-        <>
-          {[...Array(numberOfAnswers)].map((_, index) => (
-            <QuestionBox
-              key={index}
-              question={`Answer ${index + 1}`}
-              onChange={() => {}}
-            />
-          ))}
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{ paddingLeft: "1200px" }}
-          >
-            <Button onClick={handleIncrease}>+Add Answer</Button>
-            <Button onClick={handleDecrease}>-Remove Answer</Button>
-          </Box>
-        </>
+            <>
+              <Box flexDirection="row">
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  defaultValue="0"
+                  name="radio-buttons-group"
+                  onChange={(e) => {
+                    handleRadioChange(e);
+                  }}
+                >
+                  {[...Array(numberOfAnswers)].map((_, index) => (
+                    <Box
+                      key={index}
+                      display="flex"
+                      alignItems="center"
+                      sx={{ padding: "30px", paddingLeft: "100px" }}
+                    >
+                      <FormControlLabel
+                        value={String(index)}
+                        control={<Radio />}
+                      />
+                      <Typography variant="h4" sx={{ flex: "0 0 210px" }}>
+                        {`Answer ${index + 1}`}
+                      </Typography>
+                      <StyledTextField
+                        variant="outlined"
+                        value={selectedAnswers[index] || ""}
+                        onChange={(e) => {
+                          handleAnswerChange(index, e.target.value);
+                        }}
+                        fullWidth
+                      />
+                    </Box>
+                  ))}
+                </RadioGroup>
+              </Box>
+              <Box
+                display="flex"
+                alignItems="center"
+                sx={{ paddingLeft: "640px" }}
+              >
+                <Button onClick={handleIncrease}>+Add Answer</Button>
+                <Button onClick={handleDecrease}>-Remove Answer</Button>
+              </Box>
+            </>
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            paddingLeft: "100px",
-            gap: "70px",
-          }}
-        >
-          <LMSButton
-            variant="contained"
-            customFontSize="14px"
-            customHeight="40px"
-            customWidth="188px"
-          >
-            Add Question
-          </LMSButton>
-          <LMSButton
-            variant="contained"
-            customFontSize="14px"
-            customHeight="40px"
-            customWidth="130px"
-          >
-            Hide
-          </LMSButton>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "100px",
+                gap: "70px",
+              }}
+            >
+              <LMSButton
+                variant="contained"
+                customFontSize="14px"
+                customHeight="40px"
+                customWidth="188px"
+                onClick={handleAddQuestion}
+              >
+                Add Question
+              </LMSButton>
+              <LMSButton
+                variant="contained"
+                customFontSize="14px"
+                customHeight="40px"
+                customWidth="130px"
+              >
+                Hide
+              </LMSButton>
+            </Box>
+          </Box>
+          <Box width="40%">
+            <Typography
+              variant="h4"
+              color={colors.primary[800]}
+              sx={{ paddingTop: "50px", paddingLeft: "50px" }}
+            >
+              Preview
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "left",
+                paddingLeft: "100px",
+                marginRight: "45px",
+                marginTop: "45px",
+                border: "1px solid #1c1c1c",
+                borderRadius: "20px",
+                height: "80%",
+                flexDirection: "column",
+                padding: "30px",
+              }}
+            >
+              {questionsData.map((question, index) => (
+                <div key={index} style={{ marginBottom: "20px" }}>
+                  <Typography variant="h4" sx={{ flex: "0 0 30px" }}>
+                    {`${index + 1}. ${question.question} ?`}
+                  </Typography>
+                  <Box paddingLeft="20px" paddingTop="10px">
+                    {Object.entries(question.answers).map(
+                      ([ansIndex, answer]) => (
+                        <Typography
+                          key={ansIndex}
+                          variant="h4"
+                          sx={{
+                            flex: "0 0 30px",
+                            color:
+                              answer === question.correctAnswer
+                                ? "#0BE2E2"
+                                : "black",
+                            fontWeight:
+                              answer === question.correctAnswer
+                                ? "bold"
+                                : "normal",
+                          }}
+                        >
+                          {`${String.fromCharCode(
+                            65 + parseInt(ansIndex)
+                          )}. ${answer}`}
+                        </Typography>
+                      )
+                    )}
+                  </Box>
+                </div>
+              ))}
+            </Box>
+            <Box display="flex" justifyContent="center">
+              <LMSButton variant="contained" customWidth="188px">
+                Create Quiz
+              </LMSButton>
+            </Box>
+          </Box>
         </Box>
       </PaperBg>
     </Box>
