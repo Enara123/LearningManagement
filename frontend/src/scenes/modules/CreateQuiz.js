@@ -24,11 +24,16 @@ const CreateQuiz = () => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [sliderValue, setSliderValue] = useState(1);
   const [questionText, setQuestionText] = useState("");
-
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null);
+  const [selectPreviewQuestion, setSelectPreviewQuestion] = useState();
   const handleIncrease = () => {
     if (numberOfAnswers < 5) {
       setNumberOfAnswers(numberOfAnswers + 1);
     }
+  };
+
+  const handlePreviewSelectedQuestion = (index) => {
+    setSelectPreviewQuestion(index);
   };
 
   const handleDecrease = () => {
@@ -38,12 +43,8 @@ const CreateQuiz = () => {
   };
 
   const handleAddQuestion = () => {
-    const answersArray = Array.from({ length: numberOfAnswers }, (_, index) => {
-      const answerIndex = String.fromCharCode(65 + index);
-      return `Answer ${answerIndex}`;
-    });
-
     const newQuestion = {
+      questionNumber: questionsData.length + 1,
       question: questionText || "New Question",
       complexity: sliderValue,
       answers: selectedAnswers,
@@ -51,6 +52,7 @@ const CreateQuiz = () => {
         selectedAnswer !== ""
           ? selectedAnswers[selectedAnswer]
           : selectedAnswers[0],
+      status: "active",
     };
     console.log(newQuestion);
     setQuestionsData([...questionsData, newQuestion]);
@@ -68,6 +70,37 @@ const CreateQuiz = () => {
 
   const handleRadioChange = (event) => {
     setSelectedAnswer(event.target.value);
+  };
+
+  const handlePreviewRadioChange = (event) => {
+    const index = parseInt(event.target.value);
+    setSelectedQuestionIndex(index);
+    setQuestionText(questionsData[index]?.question || "");
+    setSliderValue(questionsData[index]?.complexity || 1);
+    setSelectedAnswers(questionsData[index]?.answers || {});
+
+    // Find the index of the correct answer
+    const correctAnswerIndex = Object.values(
+      questionsData[index]?.answers || {}
+    ).findIndex((answer) => answer === questionsData[index]?.correctAnswer);
+
+    // Set the selectedAnswer to the correct answer index
+    setSelectedAnswer(
+      correctAnswerIndex !== -1 ? String(correctAnswerIndex) : ""
+    );
+  };
+
+  const handleHideButtonClick = () => {
+    if (selectedQuestionIndex !== null) {
+      const updatedQuestionsData = [...questionsData];
+      if (updatedQuestionsData[selectedQuestionIndex].status === "Hidden")
+        updatedQuestionsData[selectedQuestionIndex].status = "Active";
+      else {
+        updatedQuestionsData[selectedQuestionIndex].status = "Hidden";
+      }
+      setQuestionsData(updatedQuestionsData);
+    }
+    console.log(questionsData);
   };
 
   const dynamicHeight = 780 + numberOfAnswers * 55;
@@ -113,6 +146,7 @@ const CreateQuiz = () => {
 
             <QuestionBox
               question="Question"
+              value={questionText}
               onChange={(e) => {
                 setQuestionText(e.target.value);
               }}
@@ -130,10 +164,12 @@ const CreateQuiz = () => {
                   defaultValue={1}
                   valueLabelDisplay="auto"
                   step={1}
+                  value={typeof sliderValue === "number" ? sliderValue : 0}
                   marks
                   min={1}
                   max={5}
                   onChange={handleSliderChange}
+                  aria-labelledby="input-slider"
                 />
               </Box>
             </Box>
@@ -142,7 +178,7 @@ const CreateQuiz = () => {
               <Box flexDirection="row">
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
-                  defaultValue="0"
+                  value={selectedAnswer}
                   name="radio-buttons-group"
                   onChange={(e) => {
                     handleRadioChange(e);
@@ -164,6 +200,7 @@ const CreateQuiz = () => {
                       </Typography>
                       <StyledTextField
                         variant="outlined"
+                        checked={selectedAnswer === String(index)}
                         value={selectedAnswers[index] || ""}
                         onChange={(e) => {
                           handleAnswerChange(index, e.target.value);
@@ -206,8 +243,16 @@ const CreateQuiz = () => {
                 customFontSize="14px"
                 customHeight="40px"
                 customWidth="130px"
+                onClick={handleHideButtonClick}
               >
-                Hide
+                {
+                  (questionsData[selectPreviewQuestion].status === "Hidden"
+                    ? "Unhide"
+                    : "Hide",
+                  questionsData[selectPreviewQuestion].status === "Active"
+                    ? "Hide"
+                    : "Unhide")
+                }
               </LMSButton>
             </Box>
           </Box>
@@ -228,16 +273,38 @@ const CreateQuiz = () => {
                 marginTop: "45px",
                 border: "1px solid #1c1c1c",
                 borderRadius: "20px",
-                height: "80%",
+                height: "700px",
                 flexDirection: "column",
                 padding: "30px",
+                overflowY: "auto",
               }}
             >
               {questionsData.map((question, index) => (
                 <div key={index} style={{ marginBottom: "20px" }}>
-                  <Typography variant="h4" sx={{ flex: "0 0 30px" }}>
-                    {`${index + 1}. ${question.question} ?`}
-                  </Typography>
+                  <Box display="flex" flexDirection="row" alignItems="center">
+                    <Radio
+                      checked={selectedQuestionIndex === index}
+                      onChange={() => {
+                        handlePreviewSelectedQuestion(index);
+                        handlePreviewRadioChange({ target: { value: index } });
+                      }}
+                      value={index.toString()}
+                    />
+                    <Typography
+                      variant="h4"
+                      sx={{
+                        flex: "0 0 180px",
+                        color:
+                          question.status === "Hidden" ? "#c8c8c8" : "inherit",
+                        textDecoration:
+                          question.status === "Hidden"
+                            ? "line-through"
+                            : "none",
+                      }}
+                    >
+                      {`${index + 1}. ${question.question} ?`}
+                    </Typography>
+                  </Box>
                   <Box paddingLeft="20px" paddingTop="10px">
                     {Object.entries(question.answers).map(
                       ([ansIndex, answer]) => (
