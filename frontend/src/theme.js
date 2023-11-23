@@ -1,12 +1,7 @@
-import theme from "./theme"; // Add missing import statement
 import { createTheme } from "@mui/material/styles";
 import { useMemo } from "react";
-import { themeSettings, tokens } from "./theme";
 
-const themeArray = [theme];
-export default themeArray;
-
-tokens = () => ({
+export const tokens = () => ({
   primary: {
     100: "#fbfbfb",
     200: "#f7f7f7",
@@ -31,7 +26,7 @@ tokens = () => ({
   },
 });
 
-themeSettings = () => {
+const themeSettings = () => {
   const colors = tokens();
 
   return {

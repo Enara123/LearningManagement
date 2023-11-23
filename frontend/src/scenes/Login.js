@@ -15,7 +15,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
+import LMSButton from "../components/LMSButton";
 
 function Login() {
   const history = useNavigate();
@@ -71,23 +71,6 @@ function Login() {
       }
     }
   }
-
-  const LMSButton = styled(Button)(({ theme }) => ({
-    color: "#000000",
-    backgroundColor: "#0BE2E2",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "30px",
-    cursor: "pointer",
-    fontSize: "20px",
-    margin: "50px 0px",
-    height: "50px",
-    width: "192px",
-    fontFamily: "Montserrat",
-    "&:hover": {
-      backgroundColor: "#EFF",
-    },
-  }));
 
   return (
     <div className="loginPage" style={outer}>
