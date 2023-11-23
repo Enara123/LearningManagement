@@ -1,13 +1,8 @@
-import { ThemeProvider, useTheme } from "@emotion/react";
+import { ThemeProvider } from "@emotion/react";
 import "./App.css";
 import SideBar from "./components/SideBar";
 import { CssBaseline } from "@mui/material";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Login from "./scenes/Login";
 import { createTheme } from "@mui/material/styles";
 import { grey, cyan } from "@mui/material/colors";
