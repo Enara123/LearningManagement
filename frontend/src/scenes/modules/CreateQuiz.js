@@ -25,7 +25,7 @@ const CreateQuiz = () => {
   const [sliderValue, setSliderValue] = useState(1);
   const [questionText, setQuestionText] = useState("");
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null);
-  const [selectPreviewQuestion, setSelectPreviewQuestion] = useState();
+  const [selectPreviewQuestion, setSelectPreviewQuestion] = useState(null);
   const handleIncrease = () => {
     if (numberOfAnswers < 5) {
       setNumberOfAnswers(numberOfAnswers + 1);
@@ -244,15 +244,15 @@ const CreateQuiz = () => {
                 customHeight="40px"
                 customWidth="130px"
                 onClick={handleHideButtonClick}
+                style={{
+                  display: questionsData.length === 0 ? "none" : "block",
+                }}
               >
-                {
+                {questionsData[selectPreviewQuestion] &&
                   (questionsData[selectPreviewQuestion].status === "Hidden"
                     ? "Unhide"
-                    : "Hide",
-                  questionsData[selectPreviewQuestion].status === "Active"
-                    ? "Hide"
-                    : "Unhide")
-                }
+                    : "Hide")}
+                {!questionsData[selectPreviewQuestion] && "Hide"}
               </LMSButton>
             </Box>
           </Box>

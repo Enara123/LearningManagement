@@ -12,7 +12,7 @@ export const SideBarData = [
   {
     title: "Modules",
     icon: <ArticleIcon />,
-    link: "/modules",
+    link: "/moduleMenu",
   },
   {
     title: "Report",
