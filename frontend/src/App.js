@@ -8,6 +8,9 @@ import { createTheme } from "@mui/material/styles";
 import { grey, cyan } from "@mui/material/colors";
 import LecDashboard from "./scenes/lecDashboard/LecDashboard";
 import CreateQuiz from "./scenes/modules/CreateQuiz";
+import ModuleMenu from "./scenes/modules/moduleMenu";
+import CreateModule from "./scenes/modules/createModule";
+import CreateAssessment from "./scenes/modules/CreateAssessment";
 
 function App() {
   const location = useLocation();
@@ -75,10 +78,34 @@ function App() {
             }
           />
           <Route
+            path="/moduleMenu"
+            element={
+              <main className="content">
+                <ModuleMenu />
+              </main>
+            }
+          />
+          <Route
+            path="/createModule"
+            element={
+              <main className="content">
+                <CreateModule />
+              </main>
+            }
+          />
+          <Route
             path="/create-quiz"
             element={
               <main className="content">
                 <CreateQuiz />
+              </main>
+            }
+          />
+          <Route
+            path="/create-assessment"
+            element={
+              <main className="content">
+                <CreateAssessment />
               </main>
             }
           />
