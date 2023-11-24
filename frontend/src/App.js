@@ -12,6 +12,9 @@ import ModuleInfo from "./scenes/modules/moduleInfo";
 import ModuleMenu from "./scenes/modules/moduleMenu";
 import CreateModule from "./scenes/modules/createModule";
 import CreateAssessment from "./scenes/modules/CreateAssessment";
+import Courses from "./scenes/student/Courses";
+import CourseInfo from "./scenes/student/CourseInfo";
+import AttemptQuiz from "./scenes/student/AttemptQuiz";
 
 function App() {
   const location = useLocation();
@@ -46,14 +49,17 @@ function App() {
         },
         h4: {
           fontFamily: ["Montserrat", "sans-serif"].join(","),
+          fontWeight: "bold",
           fontSize: 20,
         },
         h5: {
           fontFamily: ["Montserrat", "sans-serif"].join(","),
+          fontWeight: "bold",
           fontSize: 16,
         },
         h6: {
           fontFamily: ["Montserrat", "sans-serif"].join(","),
+          fontWeight: "bold",
           fontSize: 14,
         },
         body1: {
@@ -123,6 +129,30 @@ function App() {
             element={
               <main className="content">
                 <CreateAssessment />
+              </main>
+            }
+          />
+          <Route
+            path="/student/courses"
+            element={
+              <main className="content">
+                <Courses />
+              </main>
+            }
+          />
+          <Route
+            path="/student/course-info"
+            element={
+              <main className="content">
+                <CourseInfo />
+              </main>
+            }
+          />
+          <Route
+            path="/student/courses/attempt-quiz"
+            element={
+              <main className="content">
+                <AttemptQuiz />
               </main>
             }
           />
