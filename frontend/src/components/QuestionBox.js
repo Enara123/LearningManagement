@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import StyledTextField from "./StyledTextField";
 
-function QuestionBox({ question, onChange }) {
+function QuestionBox({ question, onChange, value }) {
   return (
     <Box
       display="flex"
@@ -12,7 +12,12 @@ function QuestionBox({ question, onChange }) {
       <Typography variant="h4" sx={{ flex: "0 0 250px" }}>
         {question}
       </Typography>
-      <StyledTextField variant="outlined" onChange={onChange} fullWidth />
+      <StyledTextField
+        variant="outlined"
+        value={value}
+        onChange={onChange}
+        fullWidth
+      />
     </Box>
   );
 }

@@ -109,10 +109,18 @@ function App() {
             }
           />
           <Route
-            path="/create-quiz"
+            path="/create-quiz/:moduleId"
             element={
               <main className="content">
                 <CreateQuiz />
+              </main>
+            }
+          />
+          <Route
+            path="/moduleMenu"
+            element={
+              <main className="content">
+                <moduleMenu />
               </main>
             }
           />

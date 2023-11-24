@@ -1,4 +1,4 @@
-import { Box, Link, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
@@ -9,6 +9,50 @@ import QuestionBox from "../../components/QuestionBox";
 const CreateModule = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette);
+  const [moduleName, setModuleName] = useState("");
+  const [moduleDescription, setModuleDescription] = useState("");
+  const [noOfAssessments, setNoOfAssessments] = useState("");
+  const [expectedStudyHours, setExpectedStudyHours] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+
+      // Prepare the request body
+      const requestBody = JSON.stringify({
+        moduleName,
+        moduleDescription,
+        noOfAssessments,
+        expectedStudyHours,
+        moduleStatus: "Active",
+      });
+
+      // Send the POST request
+      const response = await fetch("http://localhost:5000/api/savemodule", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: requestBody,
+      });
+
+      // Check if the request was successful
+      if (response.ok) {
+        const responseData = await response.json();
+        const moduleId = responseData._id;
+
+        // Navigate to the next page with moduleId
+        window.location.href = `/create-quiz/:moduleId=${moduleId}`;
+      } else {
+        console.error("Failed to save module");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Box mt="20px">
@@ -40,26 +84,30 @@ const CreateModule = () => {
           </Box>
           <QuestionBox
             question="Module Name"
+            value={moduleName}
             onChange={(e) => {
-              console.log(e.target.value);
+              setModuleName(e.target.value);
             }}
           />
           <QuestionBox
             question="Module Description"
+            value={moduleDescription}
             onChange={(e) => {
-              console.log(e.target.value);
+              setModuleDescription(e.target.value);
             }}
           />
           <QuestionBox
             question="No of Assessments"
+            value={noOfAssessments}
             onChange={(e) => {
-              console.log(e.target.value);
+              setNoOfAssessments(e.target.value);
             }}
           />
           <QuestionBox
             question="Expected Study Hours"
+            value={expectedStudyHours}
             onChange={(e) => {
-              console.log(e.target.value);
+              setExpectedStudyHours(e.target.value);
             }}
           />
 
@@ -76,6 +124,9 @@ const CreateModule = () => {
               customFontSize="14px"
               customHeight="40px"
               customWidth="188px"
+              onClick={() => {
+                handleSubmit();
+              }}
             >
               Submit
             </LMSButton>
