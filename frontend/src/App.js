@@ -141,7 +141,7 @@ function App() {
             }
           />
           <Route
-            path="/student/course-info"
+            path="/student/course-info/:moduleId"
             element={
               <main className="content">
                 <CourseInfo />

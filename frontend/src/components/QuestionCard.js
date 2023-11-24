@@ -1,36 +1,35 @@
-import { React } from "react";
+import React, { useState } from "react";
 import { Box, Typography, Radio, Button } from "@mui/material";
 import PaperBg from "./PaperBg";
-import { useState } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import StyledTextField from "../components/StyledTextField";
 
-const QuestionCard = ({ question }) => {
+const QuestionCard = ({
+  questionNumber,
+  question,
+  answers,
+  correctAnswer,
+  onNext,
+  onPrevious,
+}) => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [numberOfAnswers, setNumberOfAnswers] = useState(4);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
 
   const handleRadioChange = (event) => {
     setSelectedAnswer(event.target.value);
   };
-  const [selectedAnswers, setSelectedAnswers] = useState([]);
 
-  const handleAnswerChange = (questionIndex, answer) => {
-    setSelectedAnswers((prevAnswers) => {
-      const updatedAnswers = [...prevAnswers];
-      updatedAnswers[questionIndex] = answer;
-      return updatedAnswers;
-    });
+  const handleAnswerChange = (answer) => {
+    setSelectedAnswers(answer);
   };
 
   return (
     <Box>
       <PaperBg customWidth={1020} customHeight={"80%"}>
         <Box sx={{ padding: "30px" }}>
-          <Typography variant="h4">Question Number</Typography>
+          <Typography variant="h4">Question Number {questionNumber}</Typography>
           <Typography variant="body1" mt="10px">
-            Which of the following is the correct syntax of including a user
-            defined header files in C++?
+            {question}
           </Typography>
           <Box flexDirection="row">
             <RadioGroup
@@ -41,23 +40,23 @@ const QuestionCard = ({ question }) => {
                 handleRadioChange(e);
               }}
             >
-              {[...Array(numberOfAnswers)].map((_, index) => (
+              {answers.map((answer, index) => (
                 <Box
                   key={index}
                   display="flex"
                   alignItems="center"
                   sx={{ padding: "30px", paddingLeft: "20px" }}
                 >
-                  <FormControlLabel value={String(index)} control={<Radio />} />
+                  <FormControlLabel value={answer} control={<Radio />} />
                   <Typography variant="h5" sx={{ flex: "0 0 100px" }}>
                     {`Answer ${index + 1}`}
                   </Typography>
                   <Typography
                     variant="outlined"
-                    checked={selectedAnswer === String(index)}
+                    checked={selectedAnswer === answer}
                     value={selectedAnswers[index] || ""}
-                    onChange={(e) => {
-                      handleAnswerChange(index, e.target.value);
+                    onChange={() => {
+                      handleAnswerChange(answer);
                     }}
                     sx={{
                       display: "flex",
@@ -68,7 +67,9 @@ const QuestionCard = ({ question }) => {
                       height: "55px",
                       padding: "10px 20px",
                     }}
-                  ></Typography>
+                  >
+                    {answer}
+                  </Typography>
                 </Box>
               ))}
             </RadioGroup>
@@ -80,8 +81,12 @@ const QuestionCard = ({ question }) => {
         justifyContent="space-between"
         sx={{ mt: "20px", mb: "50px" }}
       >
-        <Button sx={{ fontSize: "16px" }}>{"<"} Previous</Button>
-        <Button sx={{ fontSize: "16px" }}>Next {">"} </Button>
+        <Button sx={{ fontSize: "16px" }} onClick={onPrevious}>
+          {"<"} Previous
+        </Button>
+        <Button sx={{ fontSize: "16px" }} onClick={onNext}>
+          Next {">"}
+        </Button>
       </Box>
     </Box>
   );
