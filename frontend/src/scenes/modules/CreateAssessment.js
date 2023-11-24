@@ -1,4 +1,4 @@
-import { Box, Link, Typography, useTheme, Button } from "@mui/material";
+import { Box, Typography, useTheme, Button } from "@mui/material";
 import React, { useState } from "react";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
@@ -7,14 +7,22 @@ import LMSButton from "../../components/LMSButton";
 import QuestionBox from "../../components/QuestionBox";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import StyledTextField from "../../components/StyledTextField";
 import DTPicker from "../../components/DateTimePicker";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import StyledTextField from "../../components/StyledTextField";
 
-const CreateModule = () => {
+const CreateAssessment = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette);
-
   const [numberOfAnswers, setNumberOfAnswers] = useState(4);
+  const [assessmentData, setAssessmentData] = useState([]);
+  const [assessmentName, setAssessmentName] = useState("");
+  const [questionText, setQuestionText] = useState("");
+  const [selectPreviewQuestion, setSelectPreviewQuestion] = useState(null);
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null);
+  const [questionData, setQuestionData] = useState([]);
+  const [selectedAnswer, setSelectedAnswer] = useState("");
+  const [selectedAnswers, setSelectedAnswers] = useState({});
 
   const handleIncrease = () => {
     if (numberOfAnswers < 5) {
@@ -26,6 +34,68 @@ const CreateModule = () => {
     if (numberOfAnswers > 3) {
       setNumberOfAnswers(numberOfAnswers - 1);
     }
+  };
+
+  const handleRadioChange = (event) => {
+    setSelectedAnswer(event.target.value);
+  };
+
+  const handleAnswerChange = (questionIndex, answer) => {
+    setSelectedAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionIndex]: answer,
+    }));
+  };
+
+  const handlePreviewSelectedQuestion = (index) => {
+    setSelectPreviewQuestion(index);
+  };
+
+  const handlePreviewRadioChange = (event) => {
+    const index = parseInt(event.target.value);
+    setSelectedQuestionIndex(index);
+    setQuestionText(questionData[index]?.question || "");
+    setSelectedAnswers(questionData[index]?.answers || {});
+
+    // Find the index of the correct answer
+    const correctAnswerIndex = Object.values(
+      questionData[index]?.answers || {}
+    ).findIndex((answer) => answer === questionData[index]?.correctAnswer);
+
+    // Set the selectedAnswer to the correct answer index
+    setSelectedAnswer(
+      correctAnswerIndex !== -1 ? String(correctAnswerIndex) : ""
+    );
+  };
+
+  const handleAddAssessment = () => {
+    const newAssessment = {
+      assessmnetNumber: assessmentData.length + 1,
+      assessmentName: assessmentName,
+      assessmentStatus: "Open",
+      unlockTime: "2021-10-10 10:00:00",
+      dueTime: "2021-10-10 10:00:00",
+    };
+    setAssessmentData([...assessmentData, newAssessment]);
+  };
+
+  const handleAddQuestion = () => {
+    const newQuestion = {
+      questionNumber: questionData.length + 1,
+      question: questionText || "New Question",
+      answers: selectedAnswers,
+      correctAnswer:
+        selectedAnswer !== ""
+          ? selectedAnswers[selectedAnswer]
+          : selectedAnswers[0],
+      status: "active",
+    };
+    console.log(newQuestion);
+    setQuestionData([...questionData, newQuestion]);
+
+    // Reset input fields after adding a question
+    setQuestionText("");
+    setSelectedAnswer("");
   };
 
   const dynamicHeight = 780 + numberOfAnswers * 55;
@@ -107,21 +177,50 @@ const CreateModule = () => {
               <QuestionBox
                 question="Question"
                 onChange={(e) => {
-                  console.log(e.target.value);
+                  setQuestionText(e.target.value);
                 }}
               />
               <>
-                {[...Array(numberOfAnswers)].map((_, index) => (
-                  <QuestionBox
-                    key={index}
-                    question={`Answer ${index + 1}`}
-                    onChange={() => {}}
-                  />
-                ))}
+                <Box flexDirection="row">
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={selectedAnswer}
+                    name="radio-buttons-group"
+                    onChange={(e) => {
+                      handleRadioChange(e);
+                    }}
+                  >
+                    {[...Array(numberOfAnswers)].map((_, index) => (
+                      <Box
+                        key={index}
+                        display="flex"
+                        alignItems="center"
+                        sx={{ padding: "30px", paddingLeft: "100px" }}
+                      >
+                        <FormControlLabel
+                          value={String(index)}
+                          control={<Radio />}
+                        />
+                        <Typography variant="h4" sx={{ flex: "0 0 210px" }}>
+                          {`Answer ${index + 1}`}
+                        </Typography>
+                        <StyledTextField
+                          variant="outlined"
+                          checked={selectedAnswer === String(index)}
+                          value={selectedAnswers[index] || ""}
+                          onChange={(e) => {
+                            handleAnswerChange(index, e.target.value);
+                          }}
+                          fullWidth
+                        />
+                      </Box>
+                    ))}
+                  </RadioGroup>
+                </Box>
                 <Box
                   display="flex"
-                  justifyContent="flex-end"
-                  sx={{ paddingRight: "20px" }}
+                  alignItems="center"
+                  sx={{ paddingLeft: "640px" }}
                 >
                   <Button onClick={handleIncrease}>+Add Answer</Button>
                   <Button onClick={handleDecrease}>-Remove Answer</Button>
@@ -140,13 +239,18 @@ const CreateModule = () => {
                   customFontSize="14px"
                   customHeight="40px"
                   customWidth="188px"
+                  onClick={handleAddQuestion}
                 >
                   Submit
                 </LMSButton>
               </Box>
             </Box>
             <Box width="40%">
-              <Typography variant="h3" textAlign="center">
+              <Typography
+                variant="h4"
+                color={colors.primary[800]}
+                sx={{ paddingTop: "50px", paddingLeft: "50px" }}
+              >
                 Preview
               </Typography>
               <Box
@@ -155,37 +259,72 @@ const CreateModule = () => {
                   alignItems: "left",
                   paddingLeft: "100px",
                   marginRight: "45px",
-                  marginTop: "20px",
+                  marginTop: "45px",
                   border: "1px solid #1c1c1c",
                   borderRadius: "20px",
-                  height: "90%",
+                  height: "700px",
                   flexDirection: "column",
                   padding: "30px",
+                  overflowY: "auto",
                 }}
               >
-                <Typography variant="h4" sx={{ flex: "0 0 30px" }}>
-                  Question
-                </Typography>
-                <Typography variant="h4" sx={{ flex: "0 0 30px" }}>
-                  Question
-                </Typography>
-                <Typography variant="h4" sx={{ flex: "0 0 30px" }}>
-                  Question
-                </Typography>
-                <Typography variant="h4" sx={{ flex: "0 0 30px" }}>
-                  Question
-                </Typography>
-              </Box>
-              <Box display="flex" justifyContent="center">
-                <LMSButton
-                  variant="contained"
-                  customFontSize="14px"
-                  customHeight="40px"
-                  customWidth="250px"
-                  onClick={submit}
-                >
-                  Create Assessment
-                </LMSButton>
+                {questionData.map((question, index) => (
+                  <div key={index} style={{ marginBottom: "20px" }}>
+                    <Box display="flex" flexDirection="row" alignItems="center">
+                      <Radio
+                        checked={selectedQuestionIndex === index}
+                        onChange={() => {
+                          handlePreviewSelectedQuestion(index);
+                          handlePreviewRadioChange({
+                            target: { value: index },
+                          });
+                        }}
+                        value={index.toString()}
+                      />
+                      <Typography
+                        variant="h4"
+                        sx={{
+                          flex: "0 0 480px",
+                          color:
+                            question.status === "Hidden"
+                              ? "#c8c8c8"
+                              : "inherit",
+                          textDecoration:
+                            question.status === "Hidden"
+                              ? "line-through"
+                              : "none",
+                        }}
+                      >
+                        {`${index + 1}. ${question.question} ?`}
+                      </Typography>
+                    </Box>
+                    <Box paddingLeft="20px" paddingTop="10px">
+                      {Object.entries(question.answers).map(
+                        ([ansIndex, answer]) => (
+                          <Typography
+                            key={ansIndex}
+                            variant="h4"
+                            sx={{
+                              flex: "0 0 30px",
+                              color:
+                                answer === question.correctAnswer
+                                  ? "#0BE2E2"
+                                  : "black",
+                              fontWeight:
+                                answer === question.correctAnswer
+                                  ? "bold"
+                                  : "normal",
+                            }}
+                          >
+                            {`${String.fromCharCode(
+                              65 + parseInt(ansIndex)
+                            )}. ${answer}`}
+                          </Typography>
+                        )
+                      )}
+                    </Box>
+                  </div>
+                ))}
               </Box>
             </Box>
           </Box>
@@ -195,4 +334,4 @@ const CreateModule = () => {
   );
 };
 
-export default CreateModule;
+export default CreateAssessment;
