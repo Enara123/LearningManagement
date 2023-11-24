@@ -7,7 +7,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 
 const QuestionCard = ({ questionNumber, question, answer, correctAnswer }) => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [numberOfAnswers, setNumberOfAnswers] = useState(4);
 
   const handleRadioChange = (event) => {
     setSelectedAnswer(event.target.value);
