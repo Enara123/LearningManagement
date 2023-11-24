@@ -149,7 +149,7 @@ function App() {
             }
           />
           <Route
-            path="/student/courses/attempt-quiz"
+            path="/student/courses/attempt-quiz/:moduleId"
             element={
               <main className="content">
                 <AttemptQuiz />

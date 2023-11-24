@@ -1,7 +1,9 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import PaperBg from "../../components/PaperBg";
 import QuestionCard from "../../components/QuestionCard";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const QuestionPreview = ({ number }) => {
   return (
@@ -22,18 +24,51 @@ const QuestionPreview = ({ number }) => {
 };
 
 const AttemptQuiz = () => {
+  const [questionData, setQuestionData] = useState(null);
+  const { moduleId } = useParams();
+
+  useEffect(() => {
+    const fetchQuestionData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/module/${moduleId}/getquestions`
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch module details: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        setQuestionData(responseData);
+      } catch (error) {
+        console.error("Error fetching question data: ", error);
+      }
+    };
+    fetchQuestionData();
+  }, [moduleId]);
+
+  if (!questionData) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <Box mt="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="Attempt Quiz" subtitle="Courses > C++ Programming" />
       </Box>
       <Box display="flex">
-        {/* Question Card */}
         <Box>
-          <QuestionCard />
+          {questionData.map((question) => (
+            <QuestionCard
+              key={question.questionId}
+              questionNumber={question.questionNumber}
+              question={question.question}
+              answer={question.answer}
+              correctAnswer={question.correctAnswer}
+            />
+          ))}
         </Box>
 
-        {/* Quiz Navigation */}
         <Box sx={{ ml: "50px" }}>
           <PaperBg customWidth={442} customHeight={300}>
             <Box sx={{ padding: "20px 30px" }}>

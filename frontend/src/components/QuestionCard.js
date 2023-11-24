@@ -1,34 +1,36 @@
-import React, { useState } from "react";
+import { React } from "react";
 import { Box, Typography, Radio, Button } from "@mui/material";
 import PaperBg from "./PaperBg";
+import { useState } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import StyledTextField from "../components/StyledTextField";
 
-const QuestionCard = ({
-  questionNumber,
-  question,
-  answers,
-  correctAnswer,
-  onNext,
-  onPrevious,
-}) => {
+const QuestionCard = ({ questionNumber, question, answer, correctAnswer }) => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [numberOfAnswers, setNumberOfAnswers] = useState(4);
 
   const handleRadioChange = (event) => {
     setSelectedAnswer(event.target.value);
   };
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
 
-  const handleAnswerChange = (answer) => {
-    setSelectedAnswers(answer);
+  const handleAnswerChange = (questionIndex, answer) => {
+    setSelectedAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[questionIndex] = answer;
+      return updatedAnswers;
+    });
   };
+
+  console.log(answer);
 
   return (
     <Box>
       <PaperBg customWidth={1020} customHeight={"80%"}>
         <Box sx={{ padding: "30px" }}>
-          <Typography variant="h4">Question Number {questionNumber}</Typography>
-          <Typography variant="body1" mt="10px">
+          <Typography variant="h4">{`Question ${questionNumber}`}</Typography>
+          <Typography variant="body1" mt="10px" sx={{ fontSize: "24px" }}>
             {question}
           </Typography>
           <Box flexDirection="row">
@@ -40,23 +42,23 @@ const QuestionCard = ({
                 handleRadioChange(e);
               }}
             >
-              {answers.map((answer, index) => (
+              {answer.map((answerOne, index) => (
                 <Box
                   key={index}
                   display="flex"
                   alignItems="center"
                   sx={{ padding: "30px", paddingLeft: "20px" }}
                 >
-                  <FormControlLabel value={answer} control={<Radio />} />
+                  <FormControlLabel value={String(index)} control={<Radio />} />
                   <Typography variant="h5" sx={{ flex: "0 0 100px" }}>
-                    {`Answer ${index + 1}`}
+                    {` ${String.fromCharCode(65 + index)} .`}
                   </Typography>
                   <Typography
                     variant="outlined"
-                    checked={selectedAnswer === answer}
-                    value={selectedAnswers[index] || ""}
-                    onChange={() => {
-                      handleAnswerChange(answer);
+                    checked={selectedAnswer === String(index)}
+                    value={answerOne || ""}
+                    onChange={(e) => {
+                      handleAnswerChange(index, e.target.value);
                     }}
                     sx={{
                       display: "flex",
@@ -66,9 +68,10 @@ const QuestionCard = ({
                       width: "100%",
                       height: "55px",
                       padding: "10px 20px",
+                      fontSize: "20px",
                     }}
                   >
-                    {answer}
+                    {answerOne}
                   </Typography>
                 </Box>
               ))}
@@ -81,12 +84,8 @@ const QuestionCard = ({
         justifyContent="space-between"
         sx={{ mt: "20px", mb: "50px" }}
       >
-        <Button sx={{ fontSize: "16px" }} onClick={onPrevious}>
-          {"<"} Previous
-        </Button>
-        <Button sx={{ fontSize: "16px" }} onClick={onNext}>
-          Next {">"}
-        </Button>
+        <Button sx={{ fontSize: "16px" }}>{"<"} Previous</Button>
+        <Button sx={{ fontSize: "16px" }}>Next {">"} </Button>
       </Box>
     </Box>
   );
