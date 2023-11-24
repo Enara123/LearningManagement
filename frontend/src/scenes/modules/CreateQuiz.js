@@ -74,7 +74,7 @@ const CreateQuiz = () => {
     const response = await fetch(
       `http://localhost:5000/api/module/${moduleId}/addquestion`,
       {
-        method: "PUt",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },

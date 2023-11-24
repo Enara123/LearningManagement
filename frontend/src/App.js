@@ -79,7 +79,7 @@ function App() {
             }
           />
           <Route
-            path="/moduleInfo"
+            path="/moduleInfo/:moduleId"
             element={
               <main className="content">
                 <ModuleInfo />

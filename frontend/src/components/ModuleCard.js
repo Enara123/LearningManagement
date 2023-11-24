@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import removeIcon from "../icons/remove.png";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
@@ -10,6 +11,7 @@ const ModuleCard = ({ moduleId }) => {
   const [moduleName, setModuleName] = useState("");
   const [description, setDescription] = useState("");
   const [bgImages, setBgImages] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/getmodule/${moduleId}`)
@@ -64,20 +66,11 @@ const ModuleCard = ({ moduleId }) => {
         },
       ],
     });
-    // fetch(`http://localhost:5000/api/deletemodule/${moduleId}`, {
-    //   method: 'DELETE'
-    // })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log('Module deleted:', data);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error deleting module:', error);
-    //   });
   };
 
   const handleView = () => {
-    console.log("View module:", moduleId);
+    // Navigate to ModuleInfo page with moduleId
+    navigate(`/moduleInfo/${moduleId}`);
   };
 
   const moduleCardStyle = {

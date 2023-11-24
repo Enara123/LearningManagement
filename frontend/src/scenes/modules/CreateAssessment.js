@@ -57,12 +57,10 @@ const CreateAssessment = () => {
     setQuestionText(questionData[index]?.question || "");
     setSelectedAnswers(questionData[index]?.answers || {});
 
-    // Find the index of the correct answer
     const correctAnswerIndex = Object.values(
       questionData[index]?.answers || {}
     ).findIndex((answer) => answer === questionData[index]?.correctAnswer);
 
-    // Set the selectedAnswer to the correct answer index
     setSelectedAnswer(
       correctAnswerIndex !== -1 ? String(correctAnswerIndex) : ""
     );
