@@ -2,6 +2,8 @@ import { Box, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import PaperBg from "../../components/PaperBg";
 import QuestionCard from "../../components/QuestionCard";
+import LMSButton from "../../components/LMSButton";
+import { useState } from "react";
 
 const QuestionPreview = ({ number }) => {
   return (
@@ -30,7 +32,13 @@ const AttemptQuiz = () => {
       <Box display="flex">
         {/* Question Card */}
         <Box>
-          <QuestionCard />
+          <LMSButton
+            variant="contained"
+            customHeight="50px"
+            customWidth="190px"
+            customFontSize="16px"
+            onClick={handleSubmit}
+          ></LMSButton>
         </Box>
 
         {/* Quiz Navigation */}

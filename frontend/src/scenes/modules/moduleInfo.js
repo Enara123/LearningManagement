@@ -57,30 +57,32 @@ const ModuleInfo = () => {
       {/* Module Description Section */}
       <Box>
         <PaperBg customWidth={1582} customHeight={180} sx={paperBgStyle}>
-          <Typography variant="h3">Module Description</Typography>
-          <Typography variant="body1" sx={{ mt: "10px" }}>
-            {moduleDescription}
-          </Typography>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Box display="flex" justifyContent="space-between">
-              <Typography sx={{ mr: "20px" }}>
-                {`No of Assessments: ${noOfAssessments}`}
-              </Typography>
-              <Typography sx={{ mr: "20px" }}>
-                {`Study time: ${expectedStudyHours}`}
-              </Typography>
-            </Box>
-            <LMSButton
-              customWidth="130px"
-              customHeight="40px"
-              customFontSize="14px"
+          <Box sx={{ padding: "30px" }}>
+            <Typography variant="h3">Module Description</Typography>
+            <Typography variant="body1" sx={{ mt: "10px" }}>
+              {moduleDescription}
+            </Typography>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              Edit
-            </LMSButton>
+              <Box display="flex" justifyContent="space-between">
+                <Typography sx={{ mr: "20px" }}>
+                  {`No of Assessments: ${noOfAssessments}`}
+                </Typography>
+                <Typography sx={{ mr: "20px" }}>
+                  {`Study time: ${expectedStudyHours}`}
+                </Typography>
+              </Box>
+              <LMSButton
+                customWidth="130px"
+                customHeight="40px"
+                customFontSize="14px"
+              >
+                Edit
+              </LMSButton>
+            </Box>
           </Box>
         </PaperBg>
       </Box>
@@ -88,26 +90,28 @@ const ModuleInfo = () => {
       {/* Module Content Section */}
       <Box display="flex" sx={{ mt: "30px" }}>
         <PaperBg customWidth={1080} customHeight={700} sx={paperBgStyle}>
-          <Typography variant="h3">Module Content</Typography>
-          <AssessmentField
-            title="Quiz Test Your Knowledge"
-            questions={`Number of Questions : ${
-              quizQuestions ? quizQuestions.length : 0
-            }`}
-            duration="Duration : 30 mins"
-          />
-          {assessment.map((assessmentItem, index) => (
+          <Box sx={{ padding: "30px" }}>
+            <Typography variant="h3">Module Content</Typography>
             <AssessmentField
-              key={index}
-              title={assessmentItem.assessmentName}
+              title="Quiz Test Your Knowledge"
               questions={`Number of Questions : ${
-                assessmentItem.assessmentQuestions
-                  ? assessmentItem.assessmentQuestions.length
-                  : 0
+                quizQuestions ? quizQuestions.length : 0
               }`}
               duration="Duration : 30 mins"
             />
-          ))}
+            {assessment.map((assessmentItem, index) => (
+              <AssessmentField
+                key={index}
+                title={assessmentItem.assessmentName}
+                questions={`Number of Questions : ${
+                  assessmentItem.assessmentQuestions
+                    ? assessmentItem.assessmentQuestions.length
+                    : 0
+                }`}
+                duration="Duration : 30 mins"
+              />
+            ))}
+          </Box>
         </PaperBg>
 
         {/* Assessment Schedule Section */}

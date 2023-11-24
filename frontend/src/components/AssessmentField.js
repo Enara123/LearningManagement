@@ -21,6 +21,7 @@ const AssessmentField = ({ title, questions, duration, assessmentId }) => {
         </Box>
         <Box>
           <LMSButton
+            variant="outlined"
             sx={{ mt: "0", mb: "0", mr: "10px" }}
             customWidth="130px"
             customHeight="40px"

@@ -4,7 +4,6 @@ import PaperBg from "./PaperBg";
 import { useState } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import StyledTextField from "../components/StyledTextField";
 
 const QuestionCard = ({ question }) => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
