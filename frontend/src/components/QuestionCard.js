@@ -1,10 +1,9 @@
 import { React } from "react";
-import { Box, Typography, Radio, Button } from "@mui/material";
+import { Box, Typography, Radio } from "@mui/material";
 import PaperBg from "./PaperBg";
 import { useState } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import StyledTextField from "../components/StyledTextField";
 
 const QuestionCard = ({ questionNumber, question, answer, correctAnswer }) => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
@@ -22,8 +21,6 @@ const QuestionCard = ({ questionNumber, question, answer, correctAnswer }) => {
       return updatedAnswers;
     });
   };
-
-  console.log(answer);
 
   return (
     <Box>
@@ -50,7 +47,7 @@ const QuestionCard = ({ questionNumber, question, answer, correctAnswer }) => {
                   sx={{ padding: "30px", paddingLeft: "20px" }}
                 >
                   <FormControlLabel value={String(index)} control={<Radio />} />
-                  <Typography variant="h5" sx={{ flex: "0 0 100px" }}>
+                  <Typography variant="h5" sx={{ flex: "0 0 60px" }}>
                     {` ${String.fromCharCode(65 + index)} .`}
                   </Typography>
                   <Typography
@@ -79,14 +76,6 @@ const QuestionCard = ({ questionNumber, question, answer, correctAnswer }) => {
           </Box>
         </Box>
       </PaperBg>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        sx={{ mt: "20px", mb: "50px" }}
-      >
-        <Button sx={{ fontSize: "16px" }}>{"<"} Previous</Button>
-        <Button sx={{ fontSize: "16px" }}>Next {">"} </Button>
-      </Box>
     </Box>
   );
 };
