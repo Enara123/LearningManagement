@@ -24,7 +24,7 @@ module.exports.saveQuizMarks = async (req, res) => {
 };
 
 module.exports.getQuizByStudentIdAndModuleId = async (req, res) => {
-  const { studentId, moduleId } = req.body;
+  const { studentId, moduleId } = req.params;
 
   QuizModel.find({ studentId, moduleId })
     .then((data) => {

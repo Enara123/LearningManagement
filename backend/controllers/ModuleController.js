@@ -1,4 +1,5 @@
 const ModuleModel = require("../models/ModuleModel");
+const QuizModel = require("../models/QuizModel");
 //const { v4: uuidv4 } = require("uuid");
 
 module.exports.getModules = async (req, res) => {
@@ -202,27 +203,39 @@ module.exports.unHideQuestion = (req, res) => {
     });
 };
 
-module.exports.getQuestions = (req, res) => {
-  const { id } = req.params;
+module.exports.getQuestions = async (req, res) => {
+  const { studentId, moduleId } = req.params;
 
-  ModuleModel.findById(id)
-    .select("quizQuestions")
+  const answeredQuestions = await QuizModel.find({ studentId, moduleId })
+    .select("asnweredQuestions.questionId")
     .exec()
-    .then((module) => {
-      if (!module) {
-        return res.status(404).send("Module not found");
-      }
+    .then((quizData) =>
+      quizData.flatMap((data) =>
+        data.asnweredQuestions.map((ans) => ans.questionId)
+      )
+    );
 
-      const randomQuestions = module.quizQuestions
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 10);
+  const module = await ModuleModel.findById(moduleId)
+    .select("quizQuestions")
+    .exec();
 
-      res.json(randomQuestions);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({ error: err, msg: "Something went wrong!" });
-    });
+  if (!module) {
+    return res.status(404).send("Module not found");
+  }
+
+  const availableQuestions = module.quizQuestions.filter(
+    (question) => !answeredQuestions.includes(question._id)
+  );
+
+  if (availableQuestions.length === 0) {
+    return res.status(404).send("Questions are finished");
+  }
+
+  const shuffledQuestions = availableQuestions.sort(() => 0.5 - Math.random());
+
+  const randomQuestions = shuffledQuestions.slice(0, 10);
+
+  res.json(randomQuestions);
 };
 
 module.exports.addAssessment = (req, res) => {

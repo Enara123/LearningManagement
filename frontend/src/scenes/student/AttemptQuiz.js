@@ -42,7 +42,7 @@ const AttemptQuiz = () => {
     const fetchQuestionData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/module/${moduleId}/getquestions`
+          `http://localhost:5000/api/module/${moduleId}/getquestions/656235540fd3ff5e42180fb2`
         );
 
         if (!response.ok) {
