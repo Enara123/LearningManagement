@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import removeIcon from "../icons/remove.png";
-import { styled } from "@mui/material/styles";
-import Button from "@mui/material/Button";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import LMSButton from "./LMSButton";
