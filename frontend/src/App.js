@@ -15,10 +15,49 @@ import CreateAssessment from "./scenes/modules/CreateAssessment";
 import Courses from "./scenes/student/Courses";
 import CourseInfo from "./scenes/student/CourseInfo";
 import AttemptQuiz from "./scenes/student/AttemptQuiz";
+import axios from "axios";
+import { baseURL } from "./utils/constant";
 
 function App() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
+
+  async function submit({
+    e,
+    username,
+    password,
+    notify,
+    history,
+    setUsername,
+    setPassword,
+  }) {
+    e.preventDefault();
+
+    if (username === "") {
+      notify("Please Enter Username");
+    } else if (password === "") {
+      notify("Please Enter Password");
+    } else {
+      try {
+        const response = await axios.post(`${baseURL}/lecturer/login`, {
+          lecturerUsername: username,
+          lecturerPassword: password,
+        });
+
+        if (response.status === 200 && response.data === "Success") {
+          history("/dashboard", { state: { id: username } });
+          setUsername("");
+          setPassword("");
+        } else {
+          notify("Username or Password is incorrect");
+        }
+      } catch (error) {
+        notify("An error occurred. Please try again.");
+        console.error(error);
+      }
+    }
+  }
+
   const theme = () =>
     createTheme({
       palette: {
@@ -75,7 +114,7 @@ function App() {
       <div className="App">
         {!isLoginPage && <SideBar />}
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Login submit={submit} />} />
           <Route
             path="/dashboard"
             element={

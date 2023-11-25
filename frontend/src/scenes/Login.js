@@ -17,7 +17,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import LMSButton from "../components/LMSButton";
 
-function Login() {
+function Login({ submit }) {
   const history = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -40,37 +40,17 @@ function Login() {
       theme: "light",
     });
 
-  async function submit(e) {
-    e.preventDefault();
-    if (username === "") {
-      notify("Please Enter Username");
-    } else if (password === "") {
-      notify("Please Enter Password");
-    } else {
-      try {
-        await axios
-          .post(`${baseURL}/login`, {
-            username,
-            password,
-          })
-          .then((res) => {
-            if (res.data === "Success") {
-              history("/dashboard", { state: { id: username } });
-              setUsername("");
-              setPassword("");
-            } else if (res.data === "not exist") {
-              notify("Username or Password is incorrect");
-            }
-          })
-          .catch((e) => {
-            notify("Username or Password is incorrect");
-            console.log(e);
-          });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
+  const handleSubmit = (e) => {
+    submit({
+      e,
+      username,
+      password,
+      notify,
+      history,
+      setUsername,
+      setPassword,
+    });
+  };
 
   return (
     <div className="loginPage" style={outer}>
@@ -114,7 +94,7 @@ function Login() {
             />
           </FormControl>
           <br />
-          <LMSButton variant="contained" onClick={(e) => submit(e)}>
+          <LMSButton variant="contained" onClick={handleSubmit}>
             Login
           </LMSButton>
 
