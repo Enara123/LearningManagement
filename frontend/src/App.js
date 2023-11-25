@@ -17,10 +17,12 @@ import CourseInfo from "./scenes/student/CourseInfo";
 import AttemptQuiz from "./scenes/student/AttemptQuiz";
 import axios from "axios";
 import { baseURL } from "./utils/constant";
+import { useState } from "react";
 
 function App() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
+  const [isUserType, setIsUserType] = useState(false);
 
   async function submit({
     e,
@@ -30,30 +32,65 @@ function App() {
     history,
     setUsername,
     setPassword,
+    isBooleanValue,
+    setIsBooleanValue,
   }) {
     e.preventDefault();
-
     if (username === "") {
       notify("Please Enter Username");
     } else if (password === "") {
       notify("Please Enter Password");
     } else {
-      try {
-        const response = await axios.post(`${baseURL}/lecturer/login`, {
-          lecturerUsername: username,
-          lecturerPassword: password,
-        });
-
-        if (response.status === 200 && response.data === "Success") {
-          history("/dashboard", { state: { id: username } });
-          setUsername("");
-          setPassword("");
-        } else {
-          notify("Username or Password is incorrect");
+      if (username.trim().charAt(0).toUpperCase() === "L") {
+        try {
+          await axios
+            .post(`${baseURL}/lecturer/login`, {
+              lecturerUsername: username,
+              lecturerPassword: password,
+            })
+            .then((res) => {
+              if (res.data === "Success") {
+                setIsBooleanValue(!isBooleanValue);
+                setIsUserType(!isUserType);
+                history("/dashboard", { state: { id: username } });
+                setUsername("");
+                setPassword("");
+              } else if (res.data === "not exist") {
+                notify("Username or Password is incorrect");
+              }
+            })
+            .catch((e) => {
+              notify("Username or Password is incorrect");
+              console.log(e);
+            });
+        } catch (e) {
+          console.log(e);
         }
-      } catch (error) {
-        notify("An error occurred. Please try again.");
-        console.error(error);
+      } else {
+        try {
+          await axios
+            .post(`${baseURL}/student/login`, {
+              studentId: username,
+              studentPassword: password,
+            })
+            .then((res) => {
+              if (res.data === "Success") {
+                setIsBooleanValue(isBooleanValue);
+                setIsUserType(isUserType);
+                history("/student/courses", { state: { id: username } });
+                setUsername("");
+                setPassword("");
+              } else if (res.data === "not exist") {
+                notify("Username or Password is incorrect");
+              }
+            })
+            .catch((e) => {
+              notify("Username or Password is incorrect");
+              console.log(e);
+            });
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
   }
@@ -112,7 +149,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="App">
-        {!isLoginPage && <SideBar />}
+        {!isLoginPage && <SideBar userType={isUserType} />}
         <Routes>
           <Route path="/" element={<Login submit={submit} />} />
           <Route

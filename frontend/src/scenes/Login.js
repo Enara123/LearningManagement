@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import LMSButton from "../components/LMSButton";
+import SideBar from "../components/SideBar";
 
 function Login({ submit }) {
   const history = useNavigate();
@@ -20,6 +21,7 @@ function Login({ submit }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const [isBooleanValue, setIsBooleanValue] = useState(false);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -46,13 +48,15 @@ function Login({ submit }) {
       history,
       setUsername,
       setPassword,
+      isBooleanValue,
+      setIsBooleanValue,
     });
   };
 
   return (
     <div className="loginPage" style={outer}>
       <div className="loginPage" style={divStyle}>
-        <form onSubmit={submit} style={{ textAlign: "center" }}>
+        <form style={{ textAlign: "center" }}>
           <img src={hatImage} alt="Hat" style={{ marginTop: "10px" }} />
 
           <Typography variant="h4" gutterBottom>
