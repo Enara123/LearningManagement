@@ -1,13 +1,12 @@
 import { React } from "react";
-import { Box, Typography, Radio, Button } from "@mui/material";
+import { Box, Typography, Radio } from "@mui/material";
 import PaperBg from "./PaperBg";
 import { useState } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-const QuestionCard = ({ question }) => {
+const QuestionCard = ({ questionNumber, question, answer, correctAnswer }) => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [numberOfAnswers, setNumberOfAnswers] = useState(4);
 
   const handleRadioChange = (event) => {
     setSelectedAnswer(event.target.value);
@@ -26,10 +25,9 @@ const QuestionCard = ({ question }) => {
     <Box>
       <PaperBg customWidth={1020} customHeight={"80%"}>
         <Box sx={{ padding: "30px" }}>
-          <Typography variant="h4">Question Number</Typography>
-          <Typography variant="body1" mt="10px">
-            Which of the following is the correct syntax of including a user
-            defined header files in C++?
+          <Typography variant="h4">{`Question ${questionNumber}`}</Typography>
+          <Typography variant="body1" mt="10px" sx={{ fontSize: "24px" }}>
+            {question}
           </Typography>
           <Box flexDirection="row">
             <RadioGroup
@@ -40,7 +38,7 @@ const QuestionCard = ({ question }) => {
                 handleRadioChange(e);
               }}
             >
-              {[...Array(numberOfAnswers)].map((_, index) => (
+              {answer.map((answerOne, index) => (
                 <Box
                   key={index}
                   display="flex"
@@ -48,13 +46,13 @@ const QuestionCard = ({ question }) => {
                   sx={{ padding: "30px", paddingLeft: "20px" }}
                 >
                   <FormControlLabel value={String(index)} control={<Radio />} />
-                  <Typography variant="h5" sx={{ flex: "0 0 100px" }}>
-                    {`Answer ${index + 1}`}
+                  <Typography variant="h5" sx={{ flex: "0 0 60px" }}>
+                    {` ${String.fromCharCode(65 + index)} .`}
                   </Typography>
                   <Typography
                     variant="outlined"
                     checked={selectedAnswer === String(index)}
-                    value={selectedAnswers[index] || ""}
+                    value={answerOne || ""}
                     onChange={(e) => {
                       handleAnswerChange(index, e.target.value);
                     }}
@@ -66,22 +64,17 @@ const QuestionCard = ({ question }) => {
                       width: "100%",
                       height: "55px",
                       padding: "10px 20px",
+                      fontSize: "20px",
                     }}
-                  ></Typography>
+                  >
+                    {answerOne}
+                  </Typography>
                 </Box>
               ))}
             </RadioGroup>
           </Box>
         </Box>
       </PaperBg>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        sx={{ mt: "20px", mb: "50px" }}
-      >
-        <Button sx={{ fontSize: "16px" }}>{"<"} Previous</Button>
-        <Button sx={{ fontSize: "16px" }}>Next {">"} </Button>
-      </Box>
     </Box>
   );
 };

@@ -1,11 +1,11 @@
 import React from "react";
 import "../App.css";
-import { SideBarData } from "./SideBarData";
+import SideBarData from "./SideBarData";
 import hatImage from "../icons/Hat.png";
 import avatarImage from "../icons/avatar.png";
 import logoutImage from "../icons/logout.png";
 
-function SideBar() {
+function SideBar({ userType }) {
   const onLogout = () => {
     window.location.pathname = "/";
   };
@@ -38,7 +38,7 @@ function SideBar() {
       >
         Mary Johnson
       </p>
-      <ul className="SideBarList">
+      {/* <ul className="SideBarList">
         {SideBarData.map((val, key) => {
           return (
             <li
@@ -55,7 +55,8 @@ function SideBar() {
             </li>
           );
         })}
-      </ul>
+      </ul> */}
+      <SideBarData userType={userType} />
       <button className="LogoutButton" onClick={onLogout}>
         <img src={logoutImage} alt="LogOut" className="LogoutImage" />
         Log Out

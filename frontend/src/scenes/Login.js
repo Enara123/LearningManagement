@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { baseURL } from "../utils/constant";
 import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
 import hatImage from "../icons/Hat.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,13 +15,15 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import LMSButton from "../components/LMSButton";
+import SideBar from "../components/SideBar";
 
-function Login() {
+function Login({ submit }) {
   const history = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const [isBooleanValue, setIsBooleanValue] = useState(false);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -40,42 +41,24 @@ function Login() {
       theme: "light",
     });
 
-  async function submit(e) {
-    e.preventDefault();
-    if (username === "") {
-      notify("Please Enter Username");
-    } else if (password === "") {
-      notify("Please Enter Password");
-    } else {
-      try {
-        await axios
-          .post(`${baseURL}/login`, {
-            username,
-            password,
-          })
-          .then((res) => {
-            if (res.data === "Success") {
-              history("/dashboard", { state: { id: username } });
-              setUsername("");
-              setPassword("");
-            } else if (res.data === "not exist") {
-              notify("Username or Password is incorrect");
-            }
-          })
-          .catch((e) => {
-            notify("Username or Password is incorrect");
-            console.log(e);
-          });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
+  const handleSubmit = (e) => {
+    submit({
+      e,
+      username,
+      password,
+      notify,
+      history,
+      setUsername,
+      setPassword,
+      isBooleanValue,
+      setIsBooleanValue,
+    });
+  };
 
   return (
     <div className="loginPage" style={outer}>
       <div className="loginPage" style={divStyle}>
-        <form onSubmit={submit} style={{ textAlign: "center" }}>
+        <form style={{ textAlign: "center" }}>
           <img src={hatImage} alt="Hat" style={{ marginTop: "10px" }} />
 
           <Typography variant="h4" gutterBottom>
@@ -114,7 +97,7 @@ function Login() {
             />
           </FormControl>
           <br />
-          <LMSButton variant="contained" onClick={(e) => submit(e)}>
+          <LMSButton variant="contained" onClick={handleSubmit}>
             Login
           </LMSButton>
 
