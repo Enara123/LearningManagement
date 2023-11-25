@@ -10,9 +10,9 @@ module.exports.getQuiz = async (req, res) => {
 };
 
 module.exports.saveQuizMarks = async (req, res) => {
-  const { studentId, moduleId, marks } = req.body;
+  const { studentId, moduleId, marks, asnweredQuestions } = req.body;
 
-  QuizModel.create({ studentId, moduleId, marks })
+  QuizModel.create({ studentId, moduleId, marks, asnweredQuestions })
     .then((data) => {
       console.log("Quiz marks saved successfully");
       res.status(200).json(data);

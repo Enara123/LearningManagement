@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { baseURL } from "../utils/constant";
 import { useNavigate } from "react-router-dom";
 import hatImage from "../icons/Hat.png";
 import { ToastContainer, toast } from "react-toastify";
