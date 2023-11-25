@@ -12,6 +12,15 @@ const quizSchema = new mongoose.Schema({
     required: true,
   },
   quizDate: { type: Date, required: true, default: Date.now() },
+  asnweredQuestions: [
+    {
+      questionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Question",
+        required: false,
+      },
+    },
+  ],
   marks: { type: Number, required: true },
 });
 

@@ -1,26 +1,17 @@
-import { React } from "react";
+import React from "react";
 import { Box, Typography, Radio } from "@mui/material";
 import PaperBg from "./PaperBg";
-import { useState } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-const QuestionCard = ({ questionNumber, question, answer, correctAnswer }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState("");
-
-  const handleRadioChange = (event) => {
-    setSelectedAnswer(event.target.value);
-  };
-  const [selectedAnswers, setSelectedAnswers] = useState([]);
-
-  const handleAnswerChange = (questionIndex, answer) => {
-    setSelectedAnswers((prevAnswers) => {
-      const updatedAnswers = [...prevAnswers];
-      updatedAnswers[questionIndex] = answer;
-      return updatedAnswers;
-    });
-  };
-
+const QuestionCard = ({
+  questionNumber,
+  question,
+  answer,
+  selectedAnswer,
+  handleRadioChange,
+  handleAnswerChange,
+}) => {
   return (
     <Box>
       <PaperBg customWidth={1020} customHeight={"80%"}>
@@ -34,9 +25,7 @@ const QuestionCard = ({ questionNumber, question, answer, correctAnswer }) => {
               aria-labelledby="demo-radio-buttons-group-label"
               value={selectedAnswer}
               name="radio-buttons-group"
-              onChange={(e) => {
-                handleRadioChange(e);
-              }}
+              onChange={handleRadioChange}
             >
               {answer.map((answerOne, index) => (
                 <Box

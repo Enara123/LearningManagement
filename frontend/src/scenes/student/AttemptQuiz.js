@@ -1,9 +1,9 @@
+import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import PaperBg from "../../components/PaperBg";
 import QuestionCard from "../../components/QuestionCard";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 const QuestionPreview = ({ number, active, onClick }) => {
   return (
@@ -33,6 +33,8 @@ const QuestionPreview = ({ number, active, onClick }) => {
 
 const AttemptQuiz = () => {
   const [questionData, setQuestionData] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [answer, setAnswer] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { moduleId } = useParams();
 
@@ -49,6 +51,8 @@ const AttemptQuiz = () => {
 
         const responseData = await response.json();
         setQuestionData(responseData);
+
+        setSelectedAnswers(Array(responseData.length).fill(""));
       } catch (error) {
         console.error("Error fetching question data: ", error);
       }
@@ -57,13 +61,70 @@ const AttemptQuiz = () => {
   }, [moduleId]);
 
   const handleNextClick = () => {
-    setCurrentQuestionIndex((prevIndex) =>
-      Math.min(prevIndex + 1, questionData.length - 1)
+    const newIndex = Math.min(
+      currentQuestionIndex + 1,
+      questionData.length - 1
     );
+    setCurrentQuestionIndex(newIndex);
   };
 
   const handlePrevClick = () => {
-    setCurrentQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+    const newIndex = Math.max(currentQuestionIndex - 1, 0);
+    setCurrentQuestionIndex(newIndex);
+  };
+
+  const handleRadioChange = (event) => {
+    const updatedAnswers = [...selectedAnswers];
+    updatedAnswers[currentQuestionIndex] = event.target.value;
+    setSelectedAnswers(updatedAnswers);
+    setAnswer(questionData[currentQuestionIndex].answer[event.target.value]);
+  };
+
+  const handleSubmitClick = async () => {
+    var correctCount = 0;
+    for (let i = 0; i < questionData.length; i++) {
+      if (
+        questionData[i].correctAnswer.includes(
+          questionData[i].answer[selectedAnswers[i]]
+        )
+      ) {
+        correctCount++;
+      }
+    }
+
+    try {
+      const studentId = "6561748bb324cfe270193b7c";
+      const marks = correctCount;
+      const asnweredQuestions = questionData.map((question, index) => ({
+        questionId: question._id,
+      }));
+
+      console.log(asnweredQuestions);
+      const requestBody = JSON.stringify({
+        studentId,
+        moduleId,
+        marks,
+        asnweredQuestions,
+      });
+
+      const response = await fetch("http://localhost:5000/api/quiz/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: requestBody,
+      });
+
+      if (response.ok) {
+        console.log(response.status);
+      } else {
+        console.log(response.status);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log(`${correctCount}/${questionData.length}`);
   };
 
   if (!questionData) {
@@ -71,6 +132,7 @@ const AttemptQuiz = () => {
   }
 
   const currentQuestion = questionData[currentQuestionIndex];
+  const isLastQuestion = currentQuestionIndex === questionData.length - 1;
 
   return (
     <Box mt="20px">
@@ -85,6 +147,8 @@ const AttemptQuiz = () => {
             question={currentQuestion.question}
             answer={currentQuestion.answer}
             correctAnswer={currentQuestion.correctAnswer}
+            selectedAnswer={selectedAnswers[currentQuestionIndex]}
+            handleRadioChange={handleRadioChange}
           />
           <Box
             display="flex"
@@ -102,12 +166,23 @@ const AttemptQuiz = () => {
             >
               {"<"} Previous
             </Button>
-            <Button
-              sx={{ fontSize: "16px", color: "#5D5D5D" }}
-              onClick={handleNextClick}
-            >
-              Next {">"}{" "}
-            </Button>
+            {isLastQuestion ? (
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ fontSize: "16px" }}
+                onClick={handleSubmitClick}
+              >
+                Submit
+              </Button>
+            ) : (
+              <Button
+                sx={{ fontSize: "16px", color: "#5D5D5D" }}
+                onClick={handleNextClick}
+              >
+                Next {">"}{" "}
+              </Button>
+            )}
           </Box>
         </Box>
 
