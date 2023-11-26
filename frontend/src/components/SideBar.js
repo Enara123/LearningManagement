@@ -38,24 +38,6 @@ function SideBar({ userType }) {
       >
         Mary Johnson
       </p>
-      {/* <ul className="SideBarList">
-        {SideBarData.map((val, key) => {
-          return (
-            <li
-              key={key}
-              id={window.location.pathname === val.link ? "active" : ""}
-              className="row"
-              onClick={() => {
-                window.location.pathname = val.link;
-              }}
-            >
-              {" "}
-              <div id="icon">{val.icon}</div>
-              <div id="title">{val.title}</div>
-            </li>
-          );
-        })}
-      </ul> */}
       <SideBarData userType={userType} />
       <button className="LogoutButton" onClick={onLogout}>
         <img src={logoutImage} alt="LogOut" className="LogoutImage" />

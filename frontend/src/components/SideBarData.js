@@ -28,7 +28,7 @@ const SideBarData = ({ userType }) => {
         {
           title: "Dashboard",
           icon: <DashboardIcon />,
-          link: "/dashboard",
+          link: "/student",
         },
         {
           title: "Courses",

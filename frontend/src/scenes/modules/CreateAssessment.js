@@ -10,6 +10,7 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import DTPicker from "../../components/DateTimePicker";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import StyledTextField from "../../components/StyledTextField";
+import ModuleNav from "../../components/ModuleNav";
 
 const CreateAssessment = () => {
   const theme = useTheme();
@@ -125,31 +126,7 @@ const CreateAssessment = () => {
       </Box>
       <Box>
         <PaperBg customWidth={1500} customHeight={dynamicHeight}>
-          <Box
-            display="flex"
-            gap="30px"
-            alignItems="center"
-            sx={{ padding: "30px", paddingLeft: "50px" }}
-          >
-            <Typography variant="h3" color={colors.primary[700]}>
-              {" "}
-              {">"} &nbsp;&nbsp;Enter Module Details
-            </Typography>
-            <Typography variant="h3" color={colors.primary[700]}>
-              {" "}
-              {">"} &nbsp;&nbsp;Create Quiz
-            </Typography>
-            <Typography
-              variant="h3"
-              color={colors.blueAccent[500]}
-              onClick={() => {
-                alert("Hello");
-              }}
-              sx={{ cursor: "pointer" }}
-            >
-              {">"} &nbsp;&nbsp;Create Assessment
-            </Typography>
-          </Box>
+          <ModuleNav />
 
           <Box display="flex">
             <Box width="60%">

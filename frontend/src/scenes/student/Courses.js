@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import Header from "../../components/Header";
-import ModuleCard from "../../components/ModuleCard";
+import CourseCard from "../../components/CourseCard";
 import { Link as RouterLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 
@@ -36,7 +36,7 @@ const Courses = () => {
       </Box>
       <Box display="flex">
         {modules.map((module) => (
-          <ModuleCard moduleId={module._id} />
+          <CourseCard moduleId={module._id} />
         ))}
       </Box>
     </Box>

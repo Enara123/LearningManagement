@@ -18,6 +18,7 @@ import AttemptQuiz from "./scenes/student/AttemptQuiz";
 import axios from "axios";
 import { baseURL } from "./utils/constant";
 import { useState } from "react";
+import StuDashboard from "./scenes/student/StuDashboard";
 
 function App() {
   const location = useLocation();
@@ -77,7 +78,7 @@ function App() {
               if (res.data === "Success") {
                 setIsBooleanValue(isBooleanValue);
                 setIsUserType(isUserType);
-                history("/student/courses", { state: { id: username } });
+                history("/student", { state: { id: username } });
                 setUsername("");
                 setPassword("");
               } else if (res.data === "not exist") {
@@ -152,6 +153,7 @@ function App() {
         {!isLoginPage && <SideBar userType={isUserType} />}
         <Routes>
           <Route path="/" element={<Login submit={submit} />} />
+          {/* Lecturer Paths */}
           <Route
             path="/dashboard"
             element={
@@ -205,6 +207,15 @@ function App() {
             element={
               <main className="content">
                 <CreateAssessment />
+              </main>
+            }
+          />
+          {/* Student Paths */}
+          <Route
+            path="/student"
+            element={
+              <main className="content">
+                <StuDashboard />
               </main>
             }
           />
