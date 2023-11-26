@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Link } from "@mui/material";
 import React, { useState } from "react";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
@@ -7,6 +7,8 @@ import LMSButton from "../../components/LMSButton";
 import QuestionBox from "../../components/QuestionBox";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import ModuleNav from "../../components/ModuleNav";
 
 const CreateModule = () => {
   const theme = useTheme();
@@ -16,6 +18,7 @@ const CreateModule = () => {
   const [noOfAssessments, setNoOfAssessments] = useState("");
   const [expectedStudyHours, setExpectedStudyHours] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const notify = (text) =>
     toast.error(text, {
@@ -93,29 +96,10 @@ const CreateModule = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="Create Module" subtitle="Modules > Create Module" />
       </Box>
+
       <Box>
         <PaperBg customWidth={1500} customHeight={800}>
-          <Box
-            display="flex"
-            gap="30px"
-            alignItems="center"
-            sx={{ padding: "30px", paddingLeft: "50px" }}
-          >
-            <Typography
-              variant="h3"
-              color={colors.blueAccent[500]}
-              onClick={() => {
-                alert("Hello");
-              }}
-              sx={{ cursor: "pointer" }}
-            >
-              {" "}
-              {">"} &nbsp;&nbsp;Enter Module Details
-            </Typography>
-            <Typography variant="h3" color={colors.primary[700]}>
-              {">"} &nbsp;&nbsp;Create Quiz
-            </Typography>
-          </Box>
+          <ModuleNav />
           <QuestionBox
             question="Module Name"
             value={moduleName}

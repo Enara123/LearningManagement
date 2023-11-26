@@ -18,6 +18,7 @@ import AttemptQuiz from "./scenes/student/AttemptQuiz";
 import axios from "axios";
 import { baseURL } from "./utils/constant";
 import { useState } from "react";
+
 import { useQueryClient, QueryClient, QueryClientProvider } from "react-query";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
@@ -183,6 +184,7 @@ function App() {
         {!isLoginPage && <SideBar userType={isUserType} />}
         <Routes>
           <Route path="/" element={<Login submit={submit} />} />
+          {/* Lecturer Paths */}
           <Route
             path="/lecturer/dashboard"
             element={
@@ -277,6 +279,15 @@ function App() {
                   </main>
                 }
               />
+            }
+          />
+          {/* Student Paths */}
+          <Route
+            path="/student"
+            element={
+              <main className="content">
+                <StuDashboard />
+              </main>
             }
           />
           <Route

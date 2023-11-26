@@ -16,6 +16,7 @@ import StyledTextField from "../../components/StyledTextField";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ModuleNav from "../../components/ModuleNav";
 
 const CreateQuiz = () => {
   var { moduleId } = useParams();
@@ -171,27 +172,7 @@ const CreateQuiz = () => {
       <PaperBg customWidth={1500} customHeight={dynamicHeight}>
         <Box display="flex">
           <Box width="60%">
-            <Box
-              display="flex"
-              gap="30px"
-              alignItems="center"
-              sx={{ padding: "30px", paddingLeft: "50px" }}
-            >
-              <Typography variant="h3" color={colors.primary[700]}>
-                {" "}
-                {">"} &nbsp;&nbsp;Enter Module Details
-              </Typography>
-              <Typography
-                variant="h3"
-                color={colors.blueAccent[500]}
-                onClick={() => {
-                  alert("Hello");
-                }}
-                sx={{ cursor: "pointer" }}
-              >
-                {">"} &nbsp;&nbsp;Create Quiz
-              </Typography>
-            </Box>
+            <ModuleNav />
 
             <QuestionBox
               question="Question"
