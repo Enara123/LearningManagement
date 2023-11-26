@@ -3,7 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import PaperBg from "../../components/PaperBg";
 import QuestionCard from "../../components/QuestionCard";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const QuestionPreview = ({ number, active, onClick }) => {
   return (
@@ -38,6 +38,25 @@ const AttemptQuiz = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { moduleId } = useParams();
 
+  const [timeLeft, setTimeLeft] = useState(1800); // 30 minutes in seconds
+  const history = useNavigate();
+
+  useEffect(() => {
+    // Update the timer every second
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => Math.max(0, prevTime - 1));
+    }, 1000);
+
+    return () => clearInterval(timer); // Clear the interval on component unmount
+  }, []);
+
+  useEffect(() => {
+    // Check if the timer has reached zero and submit the quiz
+    if (timeLeft === 0) {
+      handleSubmitClick();
+    }
+  }, [timeLeft]);
+
   useEffect(() => {
     const fetchQuestionData = async () => {
       try {
@@ -59,6 +78,14 @@ const AttemptQuiz = () => {
     };
     fetchQuestionData();
   }, [moduleId]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, "0")} Minutes ${String(
+      remainingSeconds
+    ).padStart(2, "0")} Seconds`;
+  };
 
   const handleNextClick = () => {
     const newIndex = Math.min(
@@ -117,11 +144,14 @@ const AttemptQuiz = () => {
 
       if (response.ok) {
         console.log(response.status);
+        history(`/student/course-info/${moduleId}`);
       } else {
         console.log(response.status);
+        history(`/student/course-info/${moduleId}`);
       }
     } catch (error) {
       console.log(error);
+      history(`/student/course-info/${moduleId}`);
     }
 
     console.log(`${correctCount}/${questionData.length}`);
@@ -201,8 +231,13 @@ const AttemptQuiz = () => {
                 />
               ))}
             </Box>
-            <Typography variant="h5" color="#FF0000" m="20px 30px">
-              Time: 00:00:00
+            <Typography
+              variant="h5"
+              color="#FF0000"
+              m="20px 30px"
+              sx={{ fontSize: "22px" }}
+            >
+              {`Time Left: ${formatTime(timeLeft)}`}
             </Typography>
           </PaperBg>
         </Box>
