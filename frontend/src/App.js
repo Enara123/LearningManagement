@@ -18,13 +18,29 @@ import AttemptQuiz from "./scenes/student/AttemptQuiz";
 import axios from "axios";
 import { baseURL } from "./utils/constant";
 import { useState } from "react";
+import { useQueryClient, QueryClient, QueryClientProvider } from "react-query";
+import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
 function App() {
+  const queryClient = new QueryClient();
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
   const [isUserType, setIsUserType] = useState(false);
   const [lecturerId, setLecturerId] = useState("");
   const [studentId, setStudentId] = useState("");
+  const generateSessionId = () => {
+    return Math.random().toString(36).substring(2, 15);
+  };
+  const [sessionId, setSessionId] = useState(() => {
+    // Use localStorage if available, fallback to a generated session ID
+    return localStorage.getItem("sessionId") || generateSessionId();
+  });
+
+  useEffect(() => {
+    // Save the session ID to localStorage
+    localStorage.setItem("sessionId", sessionId);
+  }, [sessionId]);
 
   async function submit({
     e,
@@ -45,57 +61,54 @@ function App() {
     } else {
       if (username.trim().charAt(0).toUpperCase() === "L") {
         try {
-          await axios
-            .post(`${baseURL}/lecturer/login`, {
-              lecturerUsername: username,
-              lecturerPassword: password,
-            })
-            .then((res) => {
-              if (res.data.split(".")[0] === "Success") {
-                setIsBooleanValue(!isBooleanValue);
-                setIsUserType(!isUserType);
-                setLecturerId(res.data.split(".")[1]);
-                history("/dashboard", { state: { id: username } });
-                setUsername("");
-                setPassword("");
-                console.log(lecturerId);
-              } else if (res.data === "not exist") {
-                notify("Username or Password is incorrect");
-              }
-            })
-            .catch((e) => {
-              notify("Username or Password is incorrect");
-              console.log(e);
-            });
+          const res = await axios.post(`${baseURL}/lecturer/login`, {
+            lecturerUsername: username,
+            lecturerPassword: password,
+          });
+
+          if (res.data.split(".")[0] === "Success") {
+            const newSessionId = generateSessionId();
+            setSessionId(newSessionId);
+            sessionStorage.setItem("sessionId", newSessionId);
+
+            setIsBooleanValue(!isBooleanValue);
+            setIsUserType(!isUserType);
+            setLecturerId(res.data.split(".")[1]);
+            history("lecturer/dashboard", { state: { id: username } });
+            setUsername("");
+            setPassword("");
+          } else if (res.data === "not exist") {
+            notify("Username or Password is incorrect");
+          }
         } catch (e) {
-          console.log(e);
+          notify("Username or Password is incorrect");
+          console.error(e);
         }
       } else {
         try {
-          await axios
-            .post(`${baseURL}/student/login`, {
-              studentId: username,
-              studentPassword: password,
-            })
-            .then((res) => {
-              if (res.data.split(".")[0] === "Success") {
-                setIsBooleanValue(isBooleanValue);
-                setIsUserType(isUserType);
-                history("/student/courses", { state: { id: username } });
-                setStudentId(res.data.split(".")[1]);
-                console.log(studentId);
-                setUsername("");
-                setPassword("");
-              } else if (res.data === "not exist") {
-                notify("Username or Password is incorrect");
-              }
-            })
-            .catch((e) => {
-              notify("Username or Password is incorrect");
-              console.log(e);
-            });
+          const res = await axios.post(`${baseURL}/student/login`, {
+            studentId: username,
+            studentPassword: password,
+          });
+
+          if (res.data.split(".")[0] === "Success") {
+            const newSessionId = generateSessionId();
+            setSessionId(newSessionId);
+            sessionStorage.setItem("sessionId", newSessionId);
+
+            setIsBooleanValue(isBooleanValue);
+            setIsUserType(isUserType);
+            history("/student/courses", { state: { id: username } });
+            setStudentId(res.data.split(".")[1]);
+            console.log(studentId);
+            setUsername("");
+            setPassword("");
+          } else if (res.data === "not exist") {
+            notify("Username or Password is incorrect");
+          }
         } catch (e) {
-          console.log(e);
+          notify("Username or Password is incorrect");
+          console.error(e);
         }
       }
     }
@@ -151,6 +164,18 @@ function App() {
       },
     });
 
+  const PrivateRoute = ({ element, userType }) => {
+    if (!sessionId) {
+      // Redirect to login if session ID is not available
+      return <Navigate to="/" />;
+    }
+
+    // Add additional checks based on userType if needed
+    // For example: if (userType === 'lecturer' && !isUserType) ...
+
+    return element;
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -159,83 +184,135 @@ function App() {
         <Routes>
           <Route path="/" element={<Login submit={submit} />} />
           <Route
-            path="/dashboard"
+            path="/lecturer/dashboard"
             element={
-              <main className="content">
-                <LecDashboard />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <LecDashboard />
+                  </main>
+                }
+              />
             }
           />
           <Route
-            path="/moduleInfo/:moduleId"
+            path="/lecturer/moduleInfo/:moduleId"
             element={
-              <main className="content">
-                <ModuleInfo />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <ModuleInfo />
+                  </main>
+                }
+              />
             }
           />
           <Route
-            path="/moduleMenu"
+            path="/lecturer/moduleMenu"
             element={
-              <main className="content">
-                <ModuleMenu />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <ModuleMenu />
+                  </main>
+                }
+              />
             }
           />
           <Route
-            path="/createModule"
+            path="/lecturer/createModule"
             element={
-              <main className="content">
-                <CreateModule />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <CreateModule />
+                  </main>
+                }
+              />
             }
           />
           <Route
-            path="/create-quiz/:moduleId"
+            path="/lecturer/create-quiz/:moduleId"
             element={
-              <main className="content">
-                <CreateQuiz />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <CreateQuiz />
+                  </main>
+                }
+              />
             }
           />
           <Route
-            path="/moduleMenu"
+            path="/student/moduleMenu"
             element={
-              <main className="content">
-                <moduleMenu />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <moduleMenu />
+                  </main>
+                }
+              />
             }
           />
           <Route
-            path="/create-assessment"
+            path="/lecturer/create-assessment"
             element={
-              <main className="content">
-                <CreateAssessment />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <CreateAssessment />
+                  </main>
+                }
+              />
             }
           />
           <Route
             path="/student/courses"
             element={
-              <main className="content">
-                <Courses />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <Courses />
+                  </main>
+                }
+              />
+            }
+          />
+          <Route
+            path="/student/courses"
+            element={
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <Courses />
+                  </main>
+                }
+              />
             }
           />
           <Route
             path="/student/course-info/:moduleId"
             element={
-              <main className="content">
-                <CourseInfo />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <CourseInfo />
+                  </main>
+                }
+              />
             }
           />
           <Route
             path="/student/courses/attempt-quiz/:moduleId"
             element={
-              <main className="content">
-                <AttemptQuiz />
-              </main>
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <AttemptQuiz />
+                  </main>
+                }
+              />
             }
           />
         </Routes>
