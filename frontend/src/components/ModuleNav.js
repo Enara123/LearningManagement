@@ -37,15 +37,15 @@ const ModuleNav = () => {
     >
       <ModuleLinkNav
         title="> &nbsp;&nbsp;Enter Module Details"
-        to="/createModule"
+        to="/lecturer/createModule"
       />
       <ModuleLinkNav
         title="> &nbsp;&nbsp;Create Quiz"
-        to="/create-quiz/:moduleId"
+        to="/lecturer/create-quiz/:moduleId"
       />
       <ModuleLinkNav
         title="> &nbsp;&nbsp;Create Assessment"
-        to="/create-assessment"
+        to="/lecturer/create-assessment"
       />
     </Box>
   );

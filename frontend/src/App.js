@@ -103,7 +103,7 @@ function App() {
             sessionStorage.setItem("sessionId", newSessionId);
             setIsBooleanValue(isBooleanValue);
             setIsUserType(isUserType);
-            history("/student/courses", { state: { id: username } });
+            history("/student", { state: { id: username } });
             setStudentId(res.data.split(".")[1]);
             console.log(studentId);
             localStorage.setItem("lecOrStu", false);
@@ -252,18 +252,6 @@ function App() {
             }
           />
           <Route
-            path="/student/moduleMenu"
-            element={
-              <PrivateRoute
-                element={
-                  <main className="content">
-                    <moduleMenu />
-                  </main>
-                }
-              />
-            }
-          />
-          <Route
             path="/lecturer/create-assessment"
             element={
               <PrivateRoute
@@ -275,18 +263,7 @@ function App() {
               />
             }
           />
-          <Route
-            path="/student/courses"
-            element={
-              <PrivateRoute
-                element={
-                  <main className="content">
-                    <Courses />
-                  </main>
-                }
-              />
-            }
-          />
+
           {/* Student Paths */}
           <Route
             path="/student"
