@@ -17,9 +17,11 @@ import { Link as RouterLink, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ModuleNav from "../../components/ModuleNav";
+import { useNavigate } from "react-router-dom";
 
 const CreateQuiz = () => {
   var { moduleId } = useParams();
+  const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.colors);
   const [numberOfAnswers, setNumberOfAnswers] = useState(4);
@@ -167,7 +169,7 @@ const CreateQuiz = () => {
   return (
     <Box mt="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header subtitle="Modules > Create Module" />
+        <Header title="Create Quiz" subtitle="Modules > Create Module" />
       </Box>
       <PaperBg customWidth={1500} customHeight={dynamicHeight}>
         <Box display="flex">
@@ -370,7 +372,13 @@ const CreateQuiz = () => {
                 underline="none"
                 color="inherit"
               >
-                <LMSButton variant="contained" customWidth="188px">
+                <LMSButton
+                  variant="contained"
+                  customWidth="188px"
+                  onClick={() => {
+                    navigate(`/lecturer/create-assessment/${moduleId}`);
+                  }}
+                >
                   Create Quiz
                 </LMSButton>
               </Link>

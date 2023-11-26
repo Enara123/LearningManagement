@@ -5,18 +5,21 @@ import { tokens } from "../../theme";
 import PaperBg from "../../components/PaperBg";
 import LMSButton from "../../components/LMSButton";
 import QuestionBox from "../../components/QuestionBox";
-import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import DTPicker from "../../components/DateTimePicker";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import StyledTextField from "../../components/StyledTextField";
 import ModuleNav from "../../components/ModuleNav";
-
+import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
 const CreateAssessment = () => {
+  var { moduleId } = useParams();
+  const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette);
+  const [assessmentId, setAssessmentId] = useState();
   const [numberOfAnswers, setNumberOfAnswers] = useState(4);
-  const [assessmentData, setAssessmentData] = useState([]);
+  const [assessmentData, setAssessmentData] = useState();
   const [assessmentName, setAssessmentName] = useState("");
   const [questionText, setQuestionText] = useState("");
   const [selectPreviewQuestion, setSelectPreviewQuestion] = useState(null);
@@ -24,6 +27,8 @@ const CreateAssessment = () => {
   const [questionData, setQuestionData] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [openTime, setOpenTime] = useState(new Date());
+  const [closeTime, setCloseTime] = useState(new Date());
 
   const handleIncrease = () => {
     if (numberOfAnswers < 5) {
@@ -35,6 +40,13 @@ const CreateAssessment = () => {
     if (numberOfAnswers > 3) {
       setNumberOfAnswers(numberOfAnswers - 1);
     }
+  };
+  const handleOpenTimeChange = (newOpenTime) => {
+    setOpenTime(newOpenTime);
+  };
+
+  const handleCloseTimeChange = (newCloseTime) => {
+    setCloseTime(newCloseTime);
   };
 
   const handleRadioChange = (event) => {
@@ -67,54 +79,142 @@ const CreateAssessment = () => {
     );
   };
 
-  const handleAddAssessment = () => {
-    const newAssessment = {
-      assessmnetNumber: assessmentData.length + 1,
+  const handleAddAssessment = async () => {
+    const newAssessment = JSON.stringify({
+      assessmentNumber: 1,
       assessmentName: assessmentName,
       assessmentStatus: "Open",
-      unlockTime: "2021-10-10 10:00:00",
-      dueTime: "2021-10-10 10:00:00",
-    };
-    setAssessmentData([...assessmentData, newAssessment]);
+      unlockTime: openTime,
+      dueTime: closeTime,
+    });
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/module/${moduleId}/addassessment`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: newAssessment,
+        }
+      );
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData.assessment._id);
+        return responseData.assessment[0]._id;
+        setAssessmentId(responseData._id);
+      } else {
+        console.log("Error " + response.status);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleAddQuestion = () => {
-    const newQuestion = {
-      questionNumber: questionData.length + 1,
-      question: questionText || "New Question",
-      answers: selectedAnswers,
-      correctAnswer:
-        selectedAnswer !== ""
-          ? selectedAnswers[selectedAnswer]
-          : selectedAnswers[0],
-      status: "active",
-    };
-    console.log(newQuestion);
-    setQuestionData([...questionData, newQuestion]);
+  const handleAddQuestion = async () => {
+    if (!assessmentId) {
+      const id = await handleAddAssessment();
+      const newQuestion = {
+        questionNumber: questionData.length + 1,
+        question: questionText || "New Question",
+        answers: selectedAnswers,
+        correctAnswer:
+          selectedAnswer !== ""
+            ? selectedAnswers[selectedAnswer]
+            : selectedAnswers[0],
+        status: "active",
+      };
+      console.log(newQuestion);
+      setQuestionData([...questionData, newQuestion]);
+      console.log(id);
+      const requestBody = JSON.stringify({
+        questionNumber: questionData.length + 1,
+        question: questionText || "New Question",
+        answer: Array.isArray(selectedAnswers)
+          ? selectedAnswers.filter((answer) => answer !== undefined)
+          : [],
+        correctAnswer:
+          selectedAnswers !== ""
+            ? selectedAnswer[selectedAnswer]
+            : selectedAnswers[0],
+        status: "active",
+      });
+      const response = await fetch(
+        `http://localhost:5000/api/module/${moduleId}/addassessmentquestion/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: requestBody,
+        }
+      );
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData);
+      } else {
+        console.error("Failed to save Question" + response.status);
+      }
 
-    // Reset input fields after adding a question
-    setQuestionText("");
-    setSelectedAnswer("");
+      // Reset input fields after adding a question
+      setQuestionText("");
+      setSelectedAnswer("");
+      setQuestionText("");
+      setSelectedAnswer("");
+      setSelectedAnswers({});
+    } else {
+      const newQuestion = {
+        questionNumber: questionData.length + 1,
+        question: questionText || "New Question",
+        answers: selectedAnswers,
+        correctAnswer:
+          selectedAnswer !== ""
+            ? selectedAnswers[selectedAnswer]
+            : selectedAnswers[0],
+        status: "active",
+      };
+      console.log(newQuestion);
+      setQuestionData([...questionData, newQuestion]);
+
+      const requestBody = JSON.stringify({
+        questionNumber: questionData.length + 1,
+        question: questionText || "New Question",
+        answer: Array.isArray(selectedAnswers)
+          ? selectedAnswers.filter((answer) => answer !== undefined)
+          : [],
+        correctAnswer:
+          selectedAnswers !== ""
+            ? selectedAnswer[selectedAnswer]
+            : selectedAnswers[0],
+        status: "active",
+      });
+      const response = await fetch(
+        ` http://localhost:5000/api/assessment/${assessmentId}/addquestion`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: requestBody,
+        }
+      );
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData);
+      } else {
+        console.error("Failed to save Question" + response.status);
+      }
+
+      // Reset input fields after adding a question
+      setQuestionText("");
+      setSelectedAnswer("");
+      setQuestionText("");
+      setSelectedAnswer("");
+      setSelectedAnswers({});
+    }
   };
 
   const dynamicHeight = 780 + numberOfAnswers * 55;
-
-  const submit = () => {
-    confirmAlert({
-      title: "Confirm to submit",
-      message: "Are you sure to do this.",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: () => alert("Click Yes"),
-        },
-        {
-          label: "No",
-          onClick: () => alert("Click No"),
-        },
-      ],
-    });
-  };
 
   return (
     <Box mt="20px">
@@ -133,7 +233,7 @@ const CreateAssessment = () => {
               <QuestionBox
                 question="Assessment Name"
                 onChange={(e) => {
-                  console.log(e.target.value);
+                  setAssessmentName(e.target.value);
                 }}
               />
               <Box
@@ -145,8 +245,16 @@ const CreateAssessment = () => {
                 <Typography variant="h4" sx={{ flex: "0 0 250px" }}>
                   Date & Time Duration
                 </Typography>
-                <DTPicker title="Open Time" />
-                <DTPicker title="Close Time" />
+                <DTPicker
+                  title="Open Time"
+                  selectedDateTime={openTime}
+                  onDateTimeChange={handleOpenTimeChange}
+                />
+                <DTPicker
+                  title="Close Time"
+                  selectedDateTime={closeTime}
+                  onDateTimeChange={handleCloseTimeChange}
+                />
               </Box>
 
               <QuestionBox
@@ -301,6 +409,16 @@ const CreateAssessment = () => {
                   </div>
                 ))}
               </Box>
+              <LMSButton
+                variant="contained"
+                customHeight="40px"
+                customWidth="300px"
+                onClick={() => {
+                  navigate("/lecturer/moduleMenu");
+                }}
+              >
+                Create Assessment
+              </LMSButton>
             </Box>
           </Box>
         </PaperBg>

@@ -46,7 +46,10 @@ router.put("/module/:id/deleteassessment", deleteAssessment);
 router.put("/module/:id/hideAssessment", hideAssessment);
 router.put("/module/:id/unhideAssessment", unHideAssessment);
 router.get("/module/:id/getassessment", getAssessments);
-router.put("/module/:id/addassessmentquestion", addAssessmentQuestion);
+router.put(
+  "/module/:id/addassessmentquestion/:assessmentId",
+  addAssessmentQuestion
+);
 router.put("/module/:id/updateassessmentquestion", updateAssessmentQuestion);
 router.put("/module/:id/deleteassessmentquestion", deleteAssessmentQuestion);
 router.put("/module/:id/hideassessmentquestion", hideAssessmentQuestion);
