@@ -10,17 +10,17 @@ const SideBarData = ({ userType }) => {
         {
           title: "Dashboard",
           icon: <DashboardIcon />,
-          link: "/dashboard",
+          link: "/lecturer/dashboard",
         },
         {
           title: "Modules",
           icon: <ArticleIcon />,
-          link: "/moduleMenu",
+          link: "/lecturer/moduleMenu",
         },
         {
           title: "Report",
           icon: <AssessmentOutlinedIcon />,
-          link: "/report",
+          link: "/lecturer/report",
         },
       ];
     } else {
@@ -28,7 +28,9 @@ const SideBarData = ({ userType }) => {
         {
           title: "Dashboard",
           icon: <DashboardIcon />,
-          link: "/student",
+
+          link: "/student/dashboard",
+
         },
         {
           title: "Courses",
