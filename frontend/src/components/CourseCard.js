@@ -69,6 +69,9 @@ const CourseCard = ({ moduleId }) => {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    overflow: "hidden",
+    paddingLeft: "17px",
+    paddingRight: "17px",
   };
 
   const courseNameStyle = {
@@ -79,7 +82,7 @@ const CourseCard = ({ moduleId }) => {
     lineHeight: "normal",
     color: "white",
     textAlign: "center",
-    marginTop: "131px",
+    marginTop: "100px",
   };
 
   const courseDescriptionStyle = {
@@ -92,6 +95,9 @@ const CourseCard = ({ moduleId }) => {
     textAlign: "center",
     marginTop: "31px",
     marginBottom: "30px",
+    overflowY: "auto", // Make the description scrollable if it overflows
+    maxHeight: "120px", // Set a maximum height for the description
+    padding: "0 15px", // Add padding to create space between the text and the sides
   };
 
   return (
@@ -100,7 +106,7 @@ const CourseCard = ({ moduleId }) => {
         {moduleName}
       </h3>
       <p className="course-description" style={courseDescriptionStyle}>
-        {description}
+        {description.split(".")[0]}
       </p>
       <LMSButton
         variant="contained"
