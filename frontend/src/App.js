@@ -18,18 +18,21 @@ import AttemptQuiz from "./scenes/student/AttemptQuiz";
 import axios from "axios";
 import { baseURL } from "./utils/constant";
 import { useState } from "react";
-
+import StuDashboard from "./scenes/student/StuDashboard";
 import { useQueryClient, QueryClient, QueryClientProvider } from "react-query";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import StudentSideBar from "../../frontend/src/components/StudentSideBar";
 
 function App() {
   const queryClient = new QueryClient();
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
-  const [isUserType, setIsUserType] = useState(false);
+  const [isUserType, setIsUserType] = useState();
   const [lecturerId, setLecturerId] = useState("");
   const [studentId, setStudentId] = useState("");
+  const [lecOrStu, setLecOrStu] = useState(false);
+
   const generateSessionId = () => {
     return Math.random().toString(36).substring(2, 15);
   };
@@ -40,6 +43,7 @@ function App() {
 
   useEffect(() => {
     // Save the session ID to localStorage
+    setLecOrStu(localStorage.getItem("lecOrStu"));
     localStorage.setItem("sessionId", sessionId);
   }, [sessionId]);
 
@@ -71,11 +75,12 @@ function App() {
             const newSessionId = generateSessionId();
             setSessionId(newSessionId);
             sessionStorage.setItem("sessionId", newSessionId);
-
             setIsBooleanValue(!isBooleanValue);
             setIsUserType(!isUserType);
             setLecturerId(res.data.split(".")[1]);
             history("lecturer/dashboard", { state: { id: username } });
+            localStorage.setItem("lecOrStu", true);
+            setLecOrStu(true);
             setUsername("");
             setPassword("");
           } else if (res.data === "not exist") {
@@ -96,12 +101,13 @@ function App() {
             const newSessionId = generateSessionId();
             setSessionId(newSessionId);
             sessionStorage.setItem("sessionId", newSessionId);
-
             setIsBooleanValue(isBooleanValue);
             setIsUserType(isUserType);
             history("/student/courses", { state: { id: username } });
             setStudentId(res.data.split(".")[1]);
             console.log(studentId);
+            localStorage.setItem("lecOrStu", false);
+            setLecOrStu(false);
             setUsername("");
             setPassword("");
           } else if (res.data === "not exist") {
@@ -170,10 +176,6 @@ function App() {
       // Redirect to login if session ID is not available
       return <Navigate to="/" />;
     }
-
-    // Add additional checks based on userType if needed
-    // For example: if (userType === 'lecturer' && !isUserType) ...
-
     return element;
   };
 
@@ -181,10 +183,14 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="App">
-        {!isLoginPage && <SideBar userType={isUserType} />}
+        {!isLoginPage &&
+          (localStorage.getItem("lecOrStu") === "true" ? (
+            <SideBar />
+          ) : (
+            <StudentSideBar />
+          ))}
         <Routes>
           <Route path="/" element={<Login submit={submit} />} />
-          {/* Lecturer Paths */}
           <Route
             path="/lecturer/dashboard"
             element={

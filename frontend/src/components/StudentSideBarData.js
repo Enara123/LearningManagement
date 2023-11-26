@@ -1,20 +1,20 @@
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ArticleIcon from "@mui/icons-material/Article";
-import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 
-const SideBarData = ({ userType }) => {
+const StudentSideBarData = () => {
   const renderContent = () => {
     return [
       {
         title: "Dashboard",
         icon: <DashboardIcon />,
-        link: "/lecturer/dashboard",
+
+        link: "/student/dashboard",
       },
       {
-        title: "Modules",
+        title: "Courses",
         icon: <ArticleIcon />,
-        link: "/lecturer/moduleMenu",
+        link: "/student/courses",
       },
     ];
   };
@@ -41,4 +41,4 @@ const SideBarData = ({ userType }) => {
   return <div>{content}</div>;
 };
 
-export default SideBarData;
+export default StudentSideBarData;
