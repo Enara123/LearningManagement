@@ -412,7 +412,7 @@ const CreateAssessment = () => {
               <LMSButton
                 variant="contained"
                 customHeight="40px"
-                customWidth="250px"
+                customWidth="300px"
                 onClick={() => {
                   navigate("/lecturer/moduleMenu");
                 }}

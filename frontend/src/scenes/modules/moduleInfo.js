@@ -68,20 +68,20 @@ const ModuleInfo = () => {
               alignItems="center"
             >
               <Box display="flex" justifyContent="space-between">
-                <Typography sx={{ mr: "20px" }}>
+                <Typography sx={{ mr: "20px", mt: "20px" }}>
                   {`No of Assessments: ${noOfAssessments}`}
                 </Typography>
-                <Typography sx={{ mr: "20px" }}>
+                <Typography sx={{ mr: "20px", mt: "20px" }}>
                   {`Study time: ${expectedStudyHours}`}
                 </Typography>
               </Box>
-              <LMSButton
+              {/* <LMSButton
                 customWidth="130px"
                 customHeight="40px"
                 customFontSize="14px"
               >
                 Edit
-              </LMSButton>
+              </LMSButton> */}
             </Box>
           </Box>
         </PaperBg>

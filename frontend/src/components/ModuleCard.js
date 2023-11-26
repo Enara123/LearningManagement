@@ -69,7 +69,7 @@ const ModuleCard = ({ moduleId }) => {
 
   const handleView = () => {
     // Navigate to ModuleInfo page with moduleId
-    navigate(`/moduleInfo/${moduleId}`);
+    navigate(`/lecturer/moduleInfo/${moduleId}`);
   };
 
   const deleteButtonStyle = {
