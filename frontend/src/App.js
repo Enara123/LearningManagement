@@ -24,6 +24,8 @@ function App() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
   const [isUserType, setIsUserType] = useState(false);
+  const [lecturerId, setLecturerId] = useState("");
+  const [studentId, setStudentId] = useState("");
 
   async function submit({
     e,
@@ -50,12 +52,14 @@ function App() {
               lecturerPassword: password,
             })
             .then((res) => {
-              if (res.data === "Success") {
+              if (res.data.split(".")[0] === "Success") {
                 setIsBooleanValue(!isBooleanValue);
                 setIsUserType(!isUserType);
+                setLecturerId(res.data.split(".")[1]);
                 history("/dashboard", { state: { id: username } });
                 setUsername("");
                 setPassword("");
+                console.log(lecturerId);
               } else if (res.data === "not exist") {
                 notify("Username or Password is incorrect");
               }
@@ -75,10 +79,12 @@ function App() {
               studentPassword: password,
             })
             .then((res) => {
-              if (res.data === "Success") {
+              if (res.data.split(".")[0] === "Success") {
                 setIsBooleanValue(isBooleanValue);
                 setIsUserType(isUserType);
-                history("/student", { state: { id: username } });
+                history("/student/courses", { state: { id: username } });
+                setStudentId(res.data.split(".")[1]);
+                console.log(studentId);
                 setUsername("");
                 setPassword("");
               } else if (res.data === "not exist") {

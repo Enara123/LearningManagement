@@ -26,9 +26,6 @@ const Courses = () => {
     fetchModules();
   }, []);
 
-  const handleCreateModule = () => {
-    console.log("create module button clicked");
-  };
   return (
     <Box mt="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">

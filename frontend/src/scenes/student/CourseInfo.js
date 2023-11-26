@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 const CourseInfo = () => {
   const [moduleDetails, setModuleDetails] = useState(null);
   const { moduleId } = useParams();
+  const [quizData, setQuizData] = useState([]);
 
   useEffect(() => {
     const fetchModuleDetails = async () => {
@@ -30,6 +31,31 @@ const CourseInfo = () => {
     };
 
     fetchModuleDetails();
+
+    const fetchQuizData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/quiz/get/6561748bb324cfe270193b7c/${moduleId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch quiz data: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        setQuizData(responseData);
+      } catch (error) {
+        console.error("Error fetching quiz data: ", error);
+      }
+    };
+
+    fetchQuizData();
   }, [moduleId]);
 
   if (!moduleDetails) {
@@ -37,6 +63,7 @@ const CourseInfo = () => {
   }
 
   const {
+    _id,
     moduleDescription,
     noOfAssessments,
     expectedStudyHours,
@@ -57,7 +84,7 @@ const CourseInfo = () => {
             <PaperBg customWidth={1075} customHeight={215} sx={paperBgStyle}>
               <Box sx={{ padding: "30px" }}>
                 <Typography variant="h3">Upcoming Activities</Typography>
-                <UpcomingAct />
+                <UpcomingAct time="No Assesments Created Yet" duration={"0"} />
               </Box>
             </PaperBg>
           </Box>
@@ -71,6 +98,7 @@ const CourseInfo = () => {
                     quizQuestions ? quizQuestions.length : 0
                   }`}
                   duration="Duration : 30 mins"
+                  quizId={_id}
                 />
                 {Array.isArray(assessment) &&
                   assessment.map((assessmentItem, index) => (
@@ -83,6 +111,7 @@ const CourseInfo = () => {
                           : 0
                       }`}
                       duration="Duration : 30 mins"
+                      assessmentId={assessmentItem._id}
                     />
                   ))}
               </Box>
@@ -92,9 +121,19 @@ const CourseInfo = () => {
 
         <Box>
           <PaperBg customWidth={470} customHeight={900} sx={paperBgStyle}>
-            <Box sx={{ padding: "30px" }}>
-              <Typography variant="h3">Quiz Attempts</Typography>
-              <QuizField />
+            <Typography variant="h3" sx={{ padding: "30px" }}>
+              Quiz Attempts
+            </Typography>
+            <Box sx={{ overflowY: "auto", maxHeight: "85%" }}>
+              {quizData.map((quiz, index) => (
+                <Box key={index} mb={2}>
+                  <QuizField
+                    time={quiz.quizDate}
+                    duration={"30 mins"}
+                    score={quiz.marks}
+                  />
+                </Box>
+              ))}
             </Box>
           </PaperBg>
         </Box>

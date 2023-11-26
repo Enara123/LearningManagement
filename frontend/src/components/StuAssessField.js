@@ -1,7 +1,22 @@
 import { Box, Typography } from "@mui/material";
 import LMSButton from "./LMSButton";
+import { useNavigate } from "react-router-dom";
 
-const AssessmentField = ({ title, questions, duration, assessmentId }) => {
+const StuAssessmentField = ({
+  title,
+  questions,
+  duration,
+  assessmentId,
+  quizId,
+}) => {
+  const navigate = useNavigate();
+  const handleAttempt = async (e) => {
+    if (quizId) {
+      navigate(`/student/courses/attempt-quiz/${quizId}`);
+    } else if (assessmentId) {
+      console.log("this is assessment id");
+    }
+  };
   return (
     <Box
       sx={{
@@ -25,6 +40,9 @@ const AssessmentField = ({ title, questions, duration, assessmentId }) => {
             customWidth="130px"
             customHeight="40px"
             customFontSize="14px"
+            onClick={(e) => {
+              handleAttempt(e);
+            }}
           >
             Attempt
           </LMSButton>
@@ -34,4 +52,4 @@ const AssessmentField = ({ title, questions, duration, assessmentId }) => {
   );
 };
 
-export default AssessmentField;
+export default StuAssessmentField;

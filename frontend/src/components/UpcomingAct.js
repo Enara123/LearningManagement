@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import LMSButton from "./LMSButton";
 
 const UpcomingAct = ({ title, time, duration, assessmentId }) => {
   return (

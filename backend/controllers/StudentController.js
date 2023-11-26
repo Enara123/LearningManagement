@@ -125,8 +125,8 @@ module.exports.loginStudent = async (req, res) => {
     );
 
     if (isMatch) {
-      console.log("Login successful");
-      return res.status(200).send("Success");
+      console.log(`Logged in Successfully... `);
+      return res.status(200).send(`Success.${student._id}`);
     } else {
       return res.status(400).send("Invalid password");
     }

@@ -10,6 +10,6 @@ const router = Router();
 
 router.get("/quiz", getQuiz);
 router.post("/quiz/save", saveQuizMarks);
-router.get("/quiz/get", getQuizByStudentIdAndModuleId);
+router.get("/quiz/get/:studentId/:moduleId", getQuizByStudentIdAndModuleId);
 
 module.exports = router;

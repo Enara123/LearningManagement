@@ -102,8 +102,8 @@ module.exports.loginLecturer = async (req, res) => {
     );
 
     if (isPasswordValid) {
-      res.status(200).send("Success");
-      console.log("Logged in Successfully...");
+      res.status(200).send(`Success.${lecturer._id}`);
+      console.log(`Logged in Successfully... `);
     } else {
       res.status(401).send("Invalid password");
     }
