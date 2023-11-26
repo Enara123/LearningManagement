@@ -79,7 +79,7 @@ const CreateModule = () => {
           const moduleId = responseData._id;
 
           // Navigate to the next page with moduleId
-          window.location.href = `/create-quiz/:moduleId=${moduleId}`;
+          window.location.href = `/lecturer/create-quiz/:moduleId=${moduleId}`;
         } else {
           console.error("Failed to save module");
         }

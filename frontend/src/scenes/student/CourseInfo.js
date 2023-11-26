@@ -76,7 +76,7 @@ const CourseInfo = () => {
   return (
     <Box mt="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="C++ Programming" subtitle="Courses > C++ Programming" />
+        <Header title="Course" />
       </Box>
       <Box display="flex">
         <Box>

@@ -19,7 +19,7 @@ const AssessmentField = ({ title, questions, duration, assessmentId }) => {
           <Typography sx={{ mr: "20px" }}>{questions}</Typography>
           <Typography>{duration}</Typography>
         </Box>
-        <Box>
+        {/* <Box>
           <LMSButton
             variant="outlined"
             sx={{ mt: "0", mb: "0", mr: "10px" }}
@@ -37,7 +37,7 @@ const AssessmentField = ({ title, questions, duration, assessmentId }) => {
           >
             Edit
           </LMSButton>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

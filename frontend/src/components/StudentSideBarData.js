@@ -9,7 +9,7 @@ const StudentSideBarData = () => {
         title: "Dashboard",
         icon: <DashboardIcon />,
 
-        link: "/student/dashboard",
+        link: "/student",
       },
       {
         title: "Courses",

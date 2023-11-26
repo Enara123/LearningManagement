@@ -38,7 +38,7 @@ const Modules = () => {
       </Box>
       <Link
         component={RouterLink}
-        to="/createModule"
+        to="/lecturer/createModule"
         underline="none"
         color="inherit"
       >
