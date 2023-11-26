@@ -5,7 +5,6 @@ import { tokens } from "../../theme";
 import PaperBg from "../../components/PaperBg";
 import LMSButton from "../../components/LMSButton";
 import QuestionBox from "../../components/QuestionBox";
-import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import DTPicker from "../../components/DateTimePicker";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
