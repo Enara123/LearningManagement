@@ -4,6 +4,7 @@ import removeIcon from "../icons/remove.png";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import LMSButton from "./LMSButton";
+import { Box } from "@mui/material";
 
 const ModuleCard = ({ moduleId }) => {
   const [moduleName, setModuleName] = useState("");
@@ -71,21 +72,6 @@ const ModuleCard = ({ moduleId }) => {
     navigate(`/moduleInfo/${moduleId}`);
   };
 
-  const moduleCardStyle = {
-    backgroundImage: `url(${bgImages[0]})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    width: "390px",
-    height: "439px",
-    borderRadius: "20px",
-    position: "relative",
-    flexShrink: "0",
-    boxShadow: "0px 0px 0px 0px rgba(0, 0, 0, 1)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  };
-
   const deleteButtonStyle = {
     background: "transparent",
     border: "none",
@@ -104,7 +90,23 @@ const ModuleCard = ({ moduleId }) => {
     lineHeight: "normal",
     color: "white",
     textAlign: "center",
-    marginTop: "131px",
+    marginTop: "100px",
+  };
+
+  const moduleCardStyle = {
+    backgroundImage: `url(${bgImages[0]})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    width: "390px",
+    height: "439px",
+    borderRadius: "20px",
+    position: "relative",
+    flexShrink: "0",
+    boxShadow: "0px 0px 0px 0px rgba(0, 0, 0, 1)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    overflow: "hidden", // Hide overflow content
   };
 
   const moduleDescriptionStyle = {
@@ -117,6 +119,9 @@ const ModuleCard = ({ moduleId }) => {
     textAlign: "center",
     marginTop: "31px",
     marginBottom: "30px",
+    overflowY: "auto", // Make the description scrollable if it overflows
+    maxHeight: "120px", // Set a maximum height for the description
+    padding: "0 15px", // Add padding to create space between the text and the sides
   };
 
   return (
@@ -131,9 +136,18 @@ const ModuleCard = ({ moduleId }) => {
       <h3 className="module-name" style={moduleNameStyle}>
         {moduleName}
       </h3>
-      <p className="module-description" style={moduleDescriptionStyle}>
-        {description}
-      </p>
+      <Box
+        sx={{
+          marginLeft: "15px",
+          marginRight: "15px",
+          overflowY: "true",
+        }}
+      >
+        <p className="module-description" style={moduleDescriptionStyle}>
+          {description.split(".")[0]}
+        </p>
+      </Box>
+
       <LMSButton
         variant="contained"
         customHeight="50px"
