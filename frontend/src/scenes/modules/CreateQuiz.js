@@ -169,7 +169,7 @@ const CreateQuiz = () => {
   return (
     <Box mt="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="Create Quiz" subtitle="Modules > Create Module" />
+        <Header title="Create Quiz" subtitle="Modules > Create Quiz" />
       </Box>
       <PaperBg customWidth={1500} customHeight={dynamicHeight}>
         <Box display="flex">
