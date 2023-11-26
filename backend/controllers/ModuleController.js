@@ -379,7 +379,7 @@ module.exports.getAssessments = (req, res) => {
 };
 
 module.exports.addAssessmentQuestion = (req, res) => {
-  const { id } = req.params;
+  const { id, assessmentId } = req.params;
   const question = req.body;
 
   const newQuestion = {
@@ -391,8 +391,8 @@ module.exports.addAssessmentQuestion = (req, res) => {
   };
 
   ModuleModel.findOneAndUpdate(
-    { _id: id, "assessment._id": question._id },
-    { $push: { "assessment.$.assessmentQuestions": newQuestion } },
+    { _id: id, "assessment._id": assessmentId },
+    { $push: { "assessment.0.assessmentQuestions": newQuestion } },
     { new: true }
   )
     .then((updatedModule) => {

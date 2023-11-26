@@ -264,7 +264,7 @@ function App() {
             }
           />
           <Route
-            path="/lecturer/create-assessment"
+            path="/lecturer/create-assessment/:moduleId"
             element={
               <PrivateRoute
                 element={
