@@ -16,6 +16,8 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import StyledTextField from "../../components/StyledTextField";
 import { Link as RouterLink, useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateQuiz = () => {
   var { moduleId } = useParams();
@@ -43,57 +45,73 @@ const CreateQuiz = () => {
       setNumberOfAnswers(numberOfAnswers - 1);
     }
   };
+  const notify = (text) =>
+    toast.error(text, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
+    });
 
   const handleAddQuestion = async () => {
-    moduleId = moduleId.split("=")[1];
-    console.log(moduleId);
-    const newQuestion = {
-      questionNumber: questionsData.length + 1,
-      question: questionText || "New Question",
-      complexity: sliderValue,
-      answers: selectedAnswers.filter((answer) => answer !== undefined),
-      correctAnswer:
-        selectedAnswer !== ""
-          ? selectedAnswers[selectedAnswer]
-          : selectedAnswers[0],
-      status: "active",
-    };
-    setQuestionsData([...questionsData, newQuestion]);
-
-    const requestBody = JSON.stringify({
-      questionNumber: questionsData.length + 1,
-      question: questionText || "New Question",
-      complexity: sliderValue,
-      answer: selectedAnswers.filter((answer) => answer !== undefined),
-      correctAnswer:
-        selectedAnswer !== ""
-          ? selectedAnswers[selectedAnswer]
-          : selectedAnswers[0],
-      status: "active",
-    });
-    const response = await fetch(
-      `http://localhost:5000/api/module/${moduleId}/addquestion`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: requestBody,
-      }
-    );
-    if (response.ok) {
-      const responseData = await response.json();
-      const moduleId = responseData._id;
-      console.log(moduleId);
-      // Navigate to the next page with moduleId
+    if (questionText === "") {
+      notify("Please enter a question");
+      return;
     } else {
-      console.error("Failed to save module" + response.status);
-    }
+      moduleId = moduleId.split("=")[1];
+      console.log(moduleId);
+      const newQuestion = {
+        questionNumber: questionsData.length + 1,
+        question: questionText || "New Question",
+        complexity: sliderValue,
+        answers: selectedAnswers.filter((answer) => answer !== undefined),
+        correctAnswer:
+          selectedAnswer !== ""
+            ? selectedAnswers[selectedAnswer]
+            : selectedAnswers[0],
+        status: "active",
+      };
+      setQuestionsData([...questionsData, newQuestion]);
 
-    // Reset input fields after adding a question
-    setQuestionText("");
-    setSliderValue(1);
-    setSelectedAnswer("");
+      const requestBody = JSON.stringify({
+        questionNumber: questionsData.length + 1,
+        question: questionText || "New Question",
+        complexity: sliderValue,
+        answer: selectedAnswers.filter((answer) => answer !== undefined),
+        correctAnswer:
+          selectedAnswer !== ""
+            ? selectedAnswers[selectedAnswer]
+            : selectedAnswers[0],
+        status: "active",
+      });
+      const response = await fetch(
+        `http://localhost:5000/api/module/${moduleId}/addquestion`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: requestBody,
+        }
+      );
+      if (response.ok) {
+        const responseData = await response.json();
+        const moduleId = responseData._id;
+        console.log(moduleId);
+        // Navigate to the next page with moduleId
+      } else {
+        console.error("Failed to save module" + response.status);
+      }
+
+      // Reset input fields after adding a question
+      setQuestionText("");
+      setSliderValue(1);
+      setSelectedAnswer("");
+    }
   };
 
   const handleSliderChange = (event, newValue) => {
@@ -381,6 +399,7 @@ const CreateQuiz = () => {
           </Box>
         </Box>
       </PaperBg>
+      <ToastContainer />
     </Box>
   );
 };
