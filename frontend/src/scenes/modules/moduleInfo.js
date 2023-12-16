@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import PaperBg from "../../components/PaperBg";
 import LMSButton from "../../components/LMSButton";
@@ -10,6 +10,8 @@ import AssessmentSchedule from "../../components/AssessmentSchedule";
 const ModuleInfo = () => {
   const [moduleDetails, setModuleDetails] = useState(null);
   const { moduleId } = useParams();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchModuleDetails = async () => {
@@ -31,8 +33,7 @@ const ModuleInfo = () => {
 
     fetchModuleDetails();
   }, [moduleId]);
-
-  // If moduleDetails is still null, display a loading message
+  
   if (!moduleDetails) {
     return <p>Loading...</p>;
   }
@@ -47,17 +48,18 @@ const ModuleInfo = () => {
 
   const paperBgStyle = { padding: "30px" };
 
+  const handlePerformanceClick = () => {
+    navigate("/lecturer/module/performance/" + moduleId);
+  };
+
   return (
     <Box mt="20px">
-      {/* Header Section */}
       <Box>
         <Header title="Modules" />
-        <LMSButton customWidth="220px" customFontSize="16px">
+        <LMSButton customWidth="220px" customFontSize="16px" onClick={handlePerformanceClick} >
           Performance
         </LMSButton>
       </Box>
-
-      {/* Module Description Section */}
       <Box>
         <PaperBg customWidth={1582} customHeight={180} sx={paperBgStyle}>
           <Box sx={{ padding: "30px" }}>
@@ -78,19 +80,10 @@ const ModuleInfo = () => {
                   {`Study time: ${expectedStudyHours}`}
                 </Typography>
               </Box>
-              {/* <LMSButton
-                customWidth="130px"
-                customHeight="40px"
-                customFontSize="14px"
-              >
-                Edit
-              </LMSButton> */}
             </Box>
           </Box>
         </PaperBg>
       </Box>
-
-      {/* Module Content Section */}
       <Box display="flex" sx={{ mt: "30px" }}>
         <PaperBg customWidth={1080} customHeight={700} sx={paperBgStyle}>
           <Box sx={{ padding: "30px" }}>
@@ -116,8 +109,6 @@ const ModuleInfo = () => {
             ))}
           </Box>
         </PaperBg>
-
-        {/* Assessment Schedule Section */}
         <PaperBg customWidth={476} customHeight={694} sx={paperBgStyle}>
           <Box sx={{ padding: "30px" }}>
             <Typography variant="h3">Assessment Schedule</Typography>

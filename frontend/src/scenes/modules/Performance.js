@@ -17,16 +17,50 @@ import { Line, Chart} from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import axios from "axios";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import LMSButton from "../../components/LMSButton";
+import { useReactToPrint } from "react-to-print";
+import html2pdf from "html2pdf.js";
 
 const Performance = () => {
   const [attemptData, setAttemptData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
+  const { moduleId } = useParams();
+
+  const componentRef = React.useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "PerformanceReport",
+    onBeforePrint: () => {
+      // Add any logic needed before printing
+    },
+    onAfterPrint: () => {
+      // Add any logic needed after printing
+    },
+  });
+
+  const generateReport = () => {
+    const content = componentRef.current;
+
+    html2pdf(content, {
+      margin: 10,
+      filename: "PerformanceReport.pdf",
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "portrait",
+      },
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/quiz/getmarks/656235540fd3ff5e42180fb2"
+          `http://localhost:5000/api/quiz/getmarks/${moduleId}`
         );
         setAttemptData(response.data);
       } catch (error) {
@@ -61,6 +95,7 @@ const Performance = () => {
               <Table>
                 <TableHead>
                   <TableRow>
+                    <TableCell>Rank</TableCell>
                     <TableCell>Student ID</TableCell>
                     <TableCell>No of attempts</TableCell>
                     <TableCell>Avg Marks</TableCell>
@@ -73,9 +108,10 @@ const Performance = () => {
                   {attemptData.map((row) => (
                     <React.Fragment key={row.id}>
                       <TableRow>
+                        <TableCell>#{row.rank}</TableCell>
                         <TableCell>{row.indexNumber}</TableCell>
                         <TableCell>{row.noOfAttempts}</TableCell>
-                        <TableCell>{calculateAverageMarks(row.marksPercentage)}</TableCell>
+                        <TableCell>{calculateAverageMarks(row.marksPercentage) + ' (' + row.grade + ")"}</TableCell>
                         <TableCell>{row.highestMark}</TableCell>
                         <TableCell>{row.lowestMark}</TableCell>
                         <TableCell>
@@ -115,6 +151,7 @@ const Performance = () => {
             </TableContainer>
           </Box>
         </PaperBg>
+        <LMSButton style={{width: "200px", fontSize: "16px"}}>Export Report</LMSButton>
       </Box>
     </Box>
   );
