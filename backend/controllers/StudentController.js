@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 module.exports.getStudents = async (req, res) => {
   try {
-    const students = await StudentModel.find(); // If using Mongoose, use find instead of findAll
+    const students = await StudentModel.find();
     res.send(students);
   } catch (error) {
     console.error(error);
