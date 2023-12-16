@@ -13,6 +13,7 @@ import {
 import PaperBg from "../../components/PaperBg";
 import Header from "../../components/Header";
 import React, { useState } from "react";
+import { Line, Chart } from "react-chartjs-2";
 
 const Performance = () => {
   const dummyData = [
@@ -23,6 +24,7 @@ const Performance = () => {
       highestMark: 95,
       lowestMark: 75,
       accuracy: "90%",
+      quizData: [80, 90, 85],
     },
     {
       id: 2,
@@ -31,6 +33,7 @@ const Performance = () => {
       highestMark: 89,
       lowestMark: 65,
       accuracy: "85%",
+      quizData: [75, 80, 82, 78],
     },
   ];
 
@@ -86,7 +89,23 @@ const Performance = () => {
                         <TableRow>
                           <TableCell colSpan={7}>
                             {/* Space for line chart (to be implemented) */}
-                            Line Chart Space
+                            <Line
+                              data={{
+                                labels: Array.from(
+                                  { length: row.attempts },
+                                  (_, i) => `Attempt ${i + 1}`
+                                ),
+                                datasets: [
+                                  {
+                                    label: "Quiz Marks",
+                                    data: row.quizData,
+                                    fill: false,
+                                    borderColor: "rgb(75, 192, 192)",
+                                    tension: 0.1,
+                                  },
+                                ],
+                              }}
+                            />
                           </TableCell>
                         </TableRow>
                       )}
