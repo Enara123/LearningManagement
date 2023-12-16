@@ -10,12 +10,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { ThemeProvider } from "@emotion/react";
+import LMSButton from "../../components/LMSButton";
 
 const LecDashboard = () => {
   return (
     <Box mt="20px">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box>
         <Header title="Dashboard" subtitle="Welcome to your dashboard" />
+        <LMSButton customWidth="250px" customFontSize="16px">
+          View Student Report
+        </LMSButton>
       </Box>
 
       {/* Main section into two */}

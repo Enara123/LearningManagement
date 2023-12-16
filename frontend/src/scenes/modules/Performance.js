@@ -88,7 +88,6 @@ const Performance = () => {
                       {expandedRow === row.id && (
                         <TableRow>
                           <TableCell colSpan={7}>
-                            {/* Space for line chart (to be implemented) */}
                             <Line
                               data={{
                                 labels: Array.from(
