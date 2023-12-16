@@ -13,7 +13,8 @@ import {
 import PaperBg from "../../components/PaperBg";
 import Header from "../../components/Header";
 import React, { useState } from "react";
-import { Line, Chart} from "react-chartjs-2";
+import { Chart as ChartJS } from "chart.js/auto";
+import { Line, Chart } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import axios from "axios";
 import { useEffect } from "react";
@@ -83,7 +84,10 @@ const Performance = () => {
   return (
     <Box mt="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="Module Performance" subtitle="View Students Performance" />
+        <Header
+          title="Module Performance"
+          subtitle="View Students Performance"
+        />
       </Box>
       <Box>
         <PaperBg customWidth={1200} customHeight={500}>
@@ -123,7 +127,6 @@ const Performance = () => {
                       {expandedRow === row.id && (
                         <TableRow>
                           <TableCell colSpan={7}>
-                            {/* Space for line chart (to be implemented) */}
                             <Line
                               data={{
                                 labels: Array.from(
@@ -133,7 +136,9 @@ const Performance = () => {
                                 datasets: [
                                   {
                                     label: "Quiz Marks",
-                                    data: row.attempts.map((item) => item.marks),
+                                    data: row.attempts.map(
+                                      (item) => item.marks
+                                    ),
                                     fill: false,
                                     borderColor: "rgb(75, 192, 192)",
                                     tension: 0.1,
