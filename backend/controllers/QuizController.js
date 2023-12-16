@@ -61,7 +61,10 @@ module.exports.getMarksByModuleId = async (req, res) => {
       }
     }
 
+    let id = 0;
+
     const marksArray = Object.values(marksObject).map(({ studentId, attempts, studentObject }) => {
+      id++;
       const noOfAttempts = attempts.length;
       const totalMarks = attempts.reduce((acc, attempt) => acc + attempt.marks, 0);
       const accuracy = (totalMarks / (noOfAttempts * 10)) * 100;
@@ -70,6 +73,7 @@ module.exports.getMarksByModuleId = async (req, res) => {
       const marksPercentage = attempts.map(attempt => (attempt.marks / 10) * 100);
 
       return {
+        id,
         indexNumber: studentObject.studentId,
         highestMark,
         lowestMark,
