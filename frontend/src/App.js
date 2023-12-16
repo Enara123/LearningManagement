@@ -102,6 +102,7 @@ function App() {
             const newSessionId = generateSessionId();
             setSessionId(newSessionId);
             sessionStorage.setItem("sessionId", newSessionId);
+            localStorage.setItem("studentId", res.data.split(".")[1]);
             setIsBooleanValue(isBooleanValue);
             setIsUserType(isUserType);
             history("/student", { state: { id: username } });
