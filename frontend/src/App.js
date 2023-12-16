@@ -243,7 +243,7 @@ function App() {
             }
           />
           <Route
-            path="/lecturer/module/performance"
+            path="/lecturer/module/performance/:moduleId"
             element={
               <PrivateRoute
                 element={

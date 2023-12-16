@@ -38,6 +38,21 @@ module.exports.getQuizByStudentIdAndModuleId = async (req, res) => {
     });
 };
 
+
+const calculateGrade = (percentage) => {
+  if (percentage >= 75) {
+    return 'A';
+  } else if (percentage >= 60) {
+    return 'B';
+  } else if (percentage >= 40) {
+    return 'C';
+  } else if (percentage >= 30) {
+    return 'D';
+  } else {
+    return 'F';
+  }
+};
+
 module.exports.getMarksByModuleId = async (req, res) => {
   const { moduleId } = req.params;
 
@@ -48,7 +63,7 @@ module.exports.getMarksByModuleId = async (req, res) => {
     for (const quiz of quizData) {
       const studentId = quiz.studentId;
       const marks = quiz.marks;
-      const quizDate = quiz.quizDate; // Assuming there is a property named quizDate in your QuizModel
+      const quizDate = quiz.quizDate;
 
       if (marksObject[studentId]) {
         marksObject[studentId].attempts.push({ marks, quizDate });
@@ -71,6 +86,7 @@ module.exports.getMarksByModuleId = async (req, res) => {
       const highestMark = (Math.max(...attempts.map(attempt => attempt.marks)) / 10) * 100;
       const lowestMark = (Math.min(...attempts.map(attempt => attempt.marks)) / 10) * 100;
       const marksPercentage = attempts.map(attempt => (attempt.marks / 10) * 100);
+      const grade = calculateGrade(accuracy);
 
       return {
         id,
@@ -82,10 +98,23 @@ module.exports.getMarksByModuleId = async (req, res) => {
         marksPercentage,
         studentId,
         attempts,
+        grade,
       };
     });
 
-    res.status(200).json(marksArray);
+    const sortedMarksArray = marksArray.sort((a, b) => {
+      if (b.accuracy !== a.accuracy) {
+        return b.accuracy - a.accuracy;
+      } else {
+        return b.noOfAttempts - a.noOfAttempts;
+      }
+    });
+
+    sortedMarksArray.forEach((student, index) => {
+      student.rank = index + 1;
+    });
+
+    res.status(200).json(sortedMarksArray);
   } catch (err) {
     console.log("Error fetching quiz marks", err);
     res.status(400).json({ message: err.message });
