@@ -50,8 +50,11 @@ const ModuleInfo = () => {
   return (
     <Box mt="20px">
       {/* Header Section */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box>
         <Header title="Modules" />
+        <LMSButton customWidth="220px" customFontSize="16px">
+          Performance
+        </LMSButton>
       </Box>
 
       {/* Module Description Section */}
