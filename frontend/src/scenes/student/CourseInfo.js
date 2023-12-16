@@ -35,7 +35,7 @@ const CourseInfo = () => {
     const fetchQuizData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/quiz/get/6561748bb324cfe270193b7c/${moduleId}`,
+          `http://localhost:5000/api/quiz/get/${localStorage.getItem("studentId")}/${moduleId}`,
           {
             method: "GET",
             headers: {
