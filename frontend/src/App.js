@@ -24,6 +24,7 @@ import { useQueryClient, QueryClient, QueryClientProvider } from "react-query";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import StudentSideBar from "../../frontend/src/components/StudentSideBar";
+import StudentReport from "./scenes/lecDashboard/StudentReport";
 
 function App() {
   const queryClient = new QueryClient();
@@ -199,6 +200,18 @@ function App() {
                 element={
                   <main className="content">
                     <LecDashboard />
+                  </main>
+                }
+              />
+            }
+          />
+          <Route
+            path="/lecturer/dashboard/studentreport"
+            element={
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <StudentReport />
                   </main>
                 }
               />

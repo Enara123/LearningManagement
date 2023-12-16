@@ -13,6 +13,7 @@ import {
 import PaperBg from "../../components/PaperBg";
 import Header from "../../components/Header";
 import React, { useState } from "react";
+import { Chart as ChartJS } from "chart.js/auto";
 import { Line, Chart } from "react-chartjs-2";
 
 const Performance = () => {
