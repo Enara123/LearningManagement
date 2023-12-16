@@ -9,6 +9,7 @@ import { grey, cyan } from "@mui/material/colors";
 import LecDashboard from "./scenes/lecDashboard/LecDashboard";
 import CreateQuiz from "./scenes/modules/CreateQuiz";
 import ModuleInfo from "./scenes/modules/moduleInfo";
+import Performance from "./scenes/modules/Performance";
 import ModuleMenu from "./scenes/modules/moduleMenu";
 import CreateModule from "./scenes/modules/createModule";
 import CreateAssessment from "./scenes/modules/CreateAssessment";
@@ -222,6 +223,18 @@ function App() {
                 element={
                   <main className="content">
                     <ModuleMenu />
+                  </main>
+                }
+              />
+            }
+          />
+          <Route
+            path="/lecturer/module/performance"
+            element={
+              <PrivateRoute
+                element={
+                  <main className="content">
+                    <Performance />
                   </main>
                 }
               />
