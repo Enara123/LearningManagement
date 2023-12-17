@@ -25,6 +25,8 @@ const {
   unHideAssessmentQuestion,
   getAssessmentQuestions,
   setAllowedBatch,
+  getQuizQuestions,
+  getQuestion
 } = require("../controllers/ModuleController");
 
 const router = Router();
@@ -40,6 +42,8 @@ router.put("/module/:id/deletequestion", deleteQuestion);
 router.put("/module/:id/hidequestion", hideQuestion);
 router.put("/module/:id/unhidequestion", unHideQuestion);
 router.get("/module/:moduleId/getquestions/:studentId", getQuestions);
+router.get("/module/:moduleId/quizQuestion", getQuizQuestions)
+router.get("/module/:moduleId/getquestion/:questionId",getQuestion)
 router.put("/module/:id/addassessment", addAssessment);
 router.put("/module/:id/updateassessment", updateAssessment);
 router.put("/module/:id/deleteassessment", deleteAssessment);

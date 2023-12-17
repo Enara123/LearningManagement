@@ -238,6 +238,37 @@ module.exports.getQuestions = async (req, res) => {
   res.json(randomQuestions);
 };
 
+module.exports.getQuestion = async (req, res) => {
+  const { moduleId, questionId } = req.params;
+
+  try {
+    const question = await ModuleModel.findOne(
+      { _id: moduleId, "quizQuestions._id": questionId },
+      { "quizQuestions.$": 1 }
+    ).exec();
+
+    res.json(question);
+  } catch (err) {
+    console.log("Error fetching question", err);
+    res.status(400).json({ message: err.message });
+  }
+};
+
+
+module.exports.getQuizQuestions = async (req, res) => {
+  const { moduleId } = req.params;
+
+  const module = await ModuleModel.findById(moduleId)
+    .select("quizQuestions")
+    .exec();
+
+  if (!module) {
+    return res.status(404).send("Module not found");
+  }
+
+  res.json(module);
+};
+
 module.exports.addAssessment = (req, res) => {
   const { id } = req.params;
   const assessment = req.body;

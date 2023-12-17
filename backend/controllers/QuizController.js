@@ -1,5 +1,6 @@
 const QuizModel = require("../models/QuizModel");
 const StudentModel = require("../models/StudentModel");
+const ModuleModel = require("../models/ModuleModel"); // Add missing import statement
 
 module.exports.getQuiz = async (req, res) => {
   try {
@@ -38,81 +39,121 @@ module.exports.getQuizByStudentIdAndModuleId = async (req, res) => {
     });
 };
 
-
 const calculateGrade = (percentage) => {
   if (percentage >= 75) {
-    return 'A';
+    return "A";
   } else if (percentage >= 60) {
-    return 'B';
+    return "B";
   } else if (percentage >= 40) {
-    return 'C';
+    return "C";
   } else if (percentage >= 30) {
-    return 'D';
+    return "D";
   } else {
-    return 'F';
+    return "F";
   }
 };
 
 module.exports.getMarksByModuleId = async (req, res) => {
   const { moduleId } = req.params;
 
+  const extractAttributes = (obj) => {
+    const {
+      quizQuestions: [{ questionNumber, complexity }],
+    } = obj;
+    return { questionId: obj._id, complexity, questionNumber };
+  };
+
   try {
     const quizData = await QuizModel.find({ moduleId });
     const marksObject = {};
 
-    for (const quiz of quizData) {
-      const studentId = quiz.studentId;
-      const marks = quiz.marks;
-      const quizDate = quiz.quizDate;
+    // Fetch complexity information for all questions
+    const complexityInfo = await Promise.all(
+      quizData.flatMap((quiz) =>
+        quiz.asnweredQuestions.map(async (answer) => ({
+          questionId: answer.questionId,
+          complexity: extractAttributes(
+            await ModuleModel.findOne(
+              { _id: moduleId, "quizQuestions._id": answer.questionId },
+              { "quizQuestions.$": 1 }
+            ).exec()
+          ),
+        }))
+      )
+    );
 
-      if (marksObject[studentId]) {
-        marksObject[studentId].attempts.push({ marks, quizDate });
-      } else {
+    for (const quiz of quizData) {
+      const { studentId, marks, quizDate, questionIds, asnweredQuestions } =
+        quiz;
+
+      if (!marksObject[studentId]) {
         marksObject[studentId] = {
           studentId,
-          attempts: [{ marks, quizDate }],
+          attempts: [],
           studentObject: await StudentModel.findOne({ _id: studentId }),
         };
       }
+
+      const attemptInfo = asnweredQuestions.map((answer) => {
+        const foundComplexity = complexityInfo.find((info) => info.questionId === answer.questionId);
+        return {
+          questionId: answer.questionId,
+          complexity: foundComplexity?.complexity,
+          questionNumber: foundComplexity?.questionNumber,
+        };
+      });
+      
+      marksObject[studentId].attempts.push({
+        questionIds,
+        marks,
+        quizDate,
+        questions: attemptInfo,
+      });
+      
     }
 
     let id = 0;
 
-    const marksArray = Object.values(marksObject).map(({ studentId, attempts, studentObject }) => {
-      id++;
-      const noOfAttempts = attempts.length;
-      const totalMarks = attempts.reduce((acc, attempt) => acc + attempt.marks, 0);
-      const accuracy = (totalMarks / (noOfAttempts * 10)) * 100;
-      const highestMark = (Math.max(...attempts.map(attempt => attempt.marks)) / 10) * 100;
-      const lowestMark = (Math.min(...attempts.map(attempt => attempt.marks)) / 10) * 100;
-      const marksPercentage = attempts.map(attempt => (attempt.marks / 10) * 100);
-      const grade = calculateGrade(accuracy);
+    const marksArray = Object.values(marksObject).map(
+      ({ studentId, attempts, studentObject }) => {
+        id++;
+        const noOfAttempts = attempts.length;
+        const totalMarks = attempts.reduce(
+          (acc, attempt) => acc + attempt.marks,
+          0
+        );
+        const accuracy = (totalMarks / (noOfAttempts * 10)) * 100;
+        const highestMark =
+          (Math.max(...attempts.map((attempt) => attempt.marks)) / 10) * 100;
+        const lowestMark =
+          (Math.min(...attempts.map((attempt) => attempt.marks)) / 10) * 100;
+        const marksPercentage = attempts.map(
+          (attempt) => (attempt.marks / 10) * 100
+        );
+        const grade = calculateGrade(accuracy);
 
-      return {
-        id,
-        indexNumber: studentObject.studentId,
-        highestMark,
-        lowestMark,
-        noOfAttempts,
-        accuracy,
-        marksPercentage,
-        studentId,
-        attempts,
-        grade,
-      };
-    });
-
-    const sortedMarksArray = marksArray.sort((a, b) => {
-      if (b.accuracy !== a.accuracy) {
-        return b.accuracy - a.accuracy;
-      } else {
-        return b.noOfAttempts - a.noOfAttempts;
+        return {
+          id,
+          indexNumber: studentObject.studentId,
+          highestMark,
+          lowestMark,
+          noOfAttempts,
+          accuracy,
+          marksPercentage,
+          studentId,
+          attempts,
+          grade,
+        };
       }
-    });
+    );
 
-    sortedMarksArray.forEach((student, index) => {
-      student.rank = index + 1;
-    });
+    const sortedMarksArray = marksArray.sort((a, b) =>
+      b.accuracy !== a.accuracy
+        ? b.accuracy - a.accuracy
+        : b.noOfAttempts - a.noOfAttempts
+    );
+
+    sortedMarksArray.forEach((student, index) => (student.rank = index + 1));
 
     res.status(200).json(sortedMarksArray);
   } catch (err) {

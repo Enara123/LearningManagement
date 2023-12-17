@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -12,50 +13,16 @@ import {
 } from "@mui/material";
 import PaperBg from "../../components/PaperBg";
 import Header from "../../components/Header";
-import React, { useState } from "react";
-import { Chart as ChartJS } from "chart.js/auto";
+import LMSButton from "../../components/LMSButton";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import { Line, Chart } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
-import axios from "axios";
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import LMSButton from "../../components/LMSButton";
-import { useReactToPrint } from "react-to-print";
-import html2pdf from "html2pdf.js";
 
 const Performance = () => {
   const [attemptData, setAttemptData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const { moduleId } = useParams();
-
-  const componentRef = React.useRef();
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-    documentTitle: "PerformanceReport",
-    onBeforePrint: () => {
-      // Add any logic needed before printing
-    },
-    onAfterPrint: () => {
-      // Add any logic needed after printing
-    },
-  });
-
-  const generateReport = () => {
-    const content = componentRef.current;
-
-    html2pdf(content, {
-      margin: 10,
-      filename: "PerformanceReport.pdf",
-      jsPDF: {
-        unit: "mm",
-        format: "a4",
-        orientation: "portrait",
-      },
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-    });
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,7 +37,7 @@ const Performance = () => {
     };
 
     fetchData();
-  }, []);
+  }, [moduleId]);
 
   const calculateAverageMarks = (marksPercentage) => {
     const sum = marksPercentage.reduce((acc, mark) => acc + mark, 0);
@@ -115,7 +82,12 @@ const Performance = () => {
                         <TableCell>#{row.rank}</TableCell>
                         <TableCell>{row.indexNumber}</TableCell>
                         <TableCell>{row.noOfAttempts}</TableCell>
-                        <TableCell>{calculateAverageMarks(row.marksPercentage) + ' (' + row.grade + ")"}</TableCell>
+                        <TableCell>
+                          {calculateAverageMarks(row.marksPercentage) +
+                            " (" +
+                            row.grade +
+                            ")"}
+                        </TableCell>
                         <TableCell>{row.highestMark}</TableCell>
                         <TableCell>{row.lowestMark}</TableCell>
                         <TableCell>
@@ -143,6 +115,23 @@ const Performance = () => {
                                     borderColor: "rgb(75, 192, 192)",
                                     tension: 0.1,
                                   },
+                                  {
+                                    label: "Average Complexity",
+                                    data: row.attempts.map((item) => {
+                                      const totalComplexity =
+                                        item.questions.reduce(
+                                          (acc, question) =>
+                                            acc +
+                                            question.complexity.complexity,
+                                          0
+                                        );
+                                      return (
+                                        (totalComplexity / item.questions.length) * 2 
+                                      );
+                                    }),
+                                    fill: false,
+                                    borderColor: "rgb(255, 0, 0)",
+                                  },
                                 ],
                               }}
                             />
@@ -156,7 +145,6 @@ const Performance = () => {
             </TableContainer>
           </Box>
         </PaperBg>
-        <LMSButton style={{width: "200px", fontSize: "16px"}}>Export Report</LMSButton>
       </Box>
     </Box>
   );
