@@ -17,9 +17,6 @@ const LecDashboard = () => {
     <Box mt="20px">
       <Box>
         <Header title="Dashboard" subtitle="Welcome to your dashboard" />
-        <LMSButton customWidth="250px" customFontSize="16px">
-          View Student Report
-        </LMSButton>
       </Box>
 
       {/* Main section into two */}

@@ -18,11 +18,14 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Line, Chart } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
+import generatePDF from "./reportGenerator";
+import { set } from "date-fns";
 
 const Performance = () => {
   const [attemptData, setAttemptData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const { moduleId } = useParams();
+  const [studentsData, setStudentsData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +33,7 @@ const Performance = () => {
         const response = await axios.get(
           `http://localhost:5000/api/quiz/getmarks/${moduleId}`
         );
+        setStudentsData(response.data);
         setAttemptData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -56,6 +60,14 @@ const Performance = () => {
           subtitle="View Students Performance"
         />
       </Box>
+      <Box mt="20px" mb="20px">
+        <LMSButton customWidth="220px" customFontSize="16px" 
+        onClick={()=> generatePDF(studentsData)}
+        >
+          Generate Report
+        </LMSButton>
+      </Box>
+
       <Box>
         <PaperBg customWidth={1200} customHeight={500}>
           <Box sx={{ padding: "30px" }}>
@@ -126,7 +138,9 @@ const Performance = () => {
                                           0
                                         );
                                       return (
-                                        (totalComplexity / item.questions.length) * 2 
+                                        (totalComplexity /
+                                          item.questions.length) *
+                                        2
                                       );
                                     }),
                                     fill: false,
